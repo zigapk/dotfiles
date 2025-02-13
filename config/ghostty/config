@@ -1,8 +1,6 @@
-theme = "Duotone Dark"
-background-opacity = 0.95
+theme = "Dracula"
+background-opacity = 0.90
 background-blur-radius = 30
 font-size = 14
 quit-after-last-window-closed = true
 
-keybind = ctrl+h=new_split:right
-keybind = ctrl+v=new_split:down

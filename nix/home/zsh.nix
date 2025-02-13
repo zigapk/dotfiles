@@ -1,7 +1,6 @@
-{
-  config,
-  pkgs,
-  ...
+{ config
+, pkgs
+, ...
 }: {
   enable = true;
   history.size = 50000;
@@ -9,6 +8,7 @@
   shellAliases = {
     vim = "nvim";
     ctrl-l = "clear";
+    v = "nvim";
     C-l = "ctrl-l";
     control-l = "clear";
     clean = "clear";
@@ -20,11 +20,16 @@
     wake-kibla = "ssh router \"for i in {1..10}; do wakeonlan -i 192.168.0.255 b2:b7:37:b5:43:f4; sleep 0.4; done\"";
     htop = "btop";
     top = "btop";
+    cat = "bat";
+    dinit = "echo \"use nix\" >> .envrc && direnv allow";
+    wttr = "curl wttr.in/Ljubljana";
+    weather = "curl wttr.in/Ljubljana";
   };
   initExtra = ''
     ZSH_DISABLE_COMPFIX=true
     export EDITOR=nvim
     export VISUAL="nvim"
+    export BAT_THEME="Dracula"
     if [ -n "$TTY" ]; then
       export GPG_TTY=$(tty)
     else
@@ -81,7 +86,7 @@
       name = "zsh-syntax-highlighting";
       src = pkgs.zsh-syntax-highlighting;
       file = "share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh";
-    } 
+    }
     {
       name = "fzf-tab";
       src = pkgs.zsh-fzf-tab;

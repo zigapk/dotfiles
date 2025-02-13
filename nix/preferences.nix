@@ -1,15 +1,16 @@
-{ pkgs, ... }: let
+{ pkgs, ... }:
+let
   inputSources = [
-        {
-            InputSourceKind = "Keyboard Layout";
-            "KeyboardLayout ID" = 252;
-            "KeyboardLayout Name" = "ABC";
-        }
-        {
-            InputSourceKind = "Keyboard Layout";
-            "KeyboardLayout ID" = -66;
-            "KeyboardLayout Name" = "Slovenian";
-        }
+    {
+      InputSourceKind = "Keyboard Layout";
+      "KeyboardLayout ID" = 252;
+      "KeyboardLayout Name" = "ABC";
+    }
+    {
+      InputSourceKind = "Keyboard Layout";
+      "KeyboardLayout ID" = -66;
+      "KeyboardLayout Name" = "Slovenian";
+    }
   ];
 in
 {
@@ -70,6 +71,7 @@ in
     NSAutomaticInlinePredictionEnabled = false;
     NSAutomaticPeriodSubstitutionEnabled = false;
     NSAutomaticQuoteSubstitutionEnabled = false;
+    _HIHideMenuBar = true;
   };
   screencapture.location = "~/Desktop";
   trackpad.Clicking = true;
@@ -95,9 +97,14 @@ in
     };
     "com.apple.symbolichotkeys" = {
       AppleSymbolicHotKeys = {
-        "64" = {enabled = 0; value = { parameters = [32 49 1048576]; type = "standard";};};
+        "64" = {
+          enabled = 0;
+          value = {
+            parameters = [ 32 49 1048576 ];
+            type = "standard";
+          };
+        };
       };
     };
   };
-
 }

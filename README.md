@@ -20,19 +20,13 @@ darwin-rebuild switch --flake ~/dotfiles/nix
 Then to update the configuration, run:
 
 ```bash
-nix flake update
+nix flake update --flake ~/dotfiles/nix/.
 ```
 
 TODO:
 
-- tmux
 - logi options+
 - midnight commnader
-- tidy up config
-- sketchybar
 - home row mods
 - corne
 - zen to nix
-
-nix --extra-experimental-features 'nix-command flakes' \
- run nix-darwin -- switch --flake ~/dotfiles/nix

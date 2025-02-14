@@ -1,14 +1,16 @@
 { config
 , pkgs
-, lib
-, vars
 , ...
-}: {
+}:
+let
+  username = "zigapk";
+in
+{
   home = {
     # Home Manager needs a bit of information about you and the
     # paths it should manage.
-    username = "zigapk";
-    homeDirectory = "/Users/zigapk";
+    inherit username;
+    homeDirectory = "/Users/" + username;
     file.".config/karabiner/karabiner.json".text = builtins.readFile ../../config/karabiner.json;
     file.".config/ghostty/config".text = builtins.readFile ../../config/ghostty/config;
 

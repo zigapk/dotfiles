@@ -19,21 +19,11 @@ in
   };
 
   # AeroSpace is an i3-like tiling window manager for macOS
-  # https://github.com/nikitabobko/AeroSpace
   services.aerospace.enable = true;
   services.aerospace.settings = {
-    # See: https://nikitabobko.github.io/AeroSpace/guide#default-config
-
-    # You can use it to add commands that run after login to macOS user
-    # session. 'start-at-login' needs to be 'true' for 'after-login-command'
-    # to work Available commands:
-    # https://nikitabobko.github.io/AeroSpace/commands
     after-login-command = [ ];
 
-    # You can use it to add commands that run after AeroSpace startup.
-    # 'after-startup-command' is run after 'after-login-command'
-    # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-    after-startup-command = [ ];
+    after-startup-command = [ "exec-and-forget sketchybar" ];
 
     # Start AeroSpace at login
     # AeroSpace started at login is managed by home-manager and launchd instead

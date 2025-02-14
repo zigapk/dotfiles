@@ -29,6 +29,7 @@
       configuration = { pkgs, ... }: {
         nixpkgs.config.allowUnfree = true;
 
+        # System packages
         environment.systemPackages = [
           pkgs.wget
           pkgs.tree
@@ -61,13 +62,17 @@
           pkgs.nodejs_22
         ];
 
+        # User-related config
         users.users.zigapk = {
           name = username;
-          home = "/Users/zigapk";
+          home = "/Users/" + username;
         };
 
+        # Homebrew for the packages not available in nixpkgs
         homebrew = {
           enable = true;
+
+          # Delete everything not specified here and automatically update & upgrade everything
           onActivation = {
             cleanup = "zap";
             autoUpdate = true;
@@ -80,6 +85,7 @@
             "ghostty" # TODO: install ghostty from nixpkgs
             "anydesk"
           ];
+          # App-store apps
           masApps = {
             "ChatGPT" = 6448311069;
             "TickTick" = 966085870;
@@ -89,24 +95,9 @@
           };
         };
 
-        nix.linux-builder = {
-          enable = true;
-          package = pkgs.darwin.linux-builder-x86_64;
-          ephemeral = true;
-          maxJobs = 4;
-          config = {
-            virtualisation = {
-              darwin-builder = {
-                diskSize = 40 * 1024;
-                memorySize = 2 * 1024;
-              };
-              cores = 2;
-            };
-          };
-        };
+        # Nix config
         nix.settings = {
           trusted-users = [ "@admin" ];
-
           # Necessary for using flakes on this system.
           experimental-features = "nix-command flakes";
         };
@@ -116,8 +107,12 @@
         };
 
         imports = [
+          # Sketchybar (status bar)
           ./sketchybar/default.nix
+          # Aerospace tiling window manager
           ./aerospace.nix
+          # Linux builder for non-darwin targets
+          ./linux-builder.nix
         ];
 
         # Mac settings
@@ -133,10 +128,12 @@
       };
     in
     {
-      # Build darwin flake using:
+      # Unicorn (my M1 MacBook Pro)
       darwinConfigurations."unicorn" = nix-darwin.lib.darwinSystem {
         modules = [
+          # Base config
           configuration
+          # Add home-manager
           home-manager.darwinModules.home-manager
           {
             home-manager = {
@@ -148,6 +145,7 @@
               users.zigapk = import ./home/home.nix;
             };
           }
+          # Add nix-homebrew
           nix-homebrew.darwinModules.nix-homebrew
           {
             nix-homebrew = {

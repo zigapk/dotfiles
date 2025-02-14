@@ -62,6 +62,7 @@ sketchybar \
     else if(cond ~ /Dust|Sand/) { emoji=\"🌪️\" } \
     else if(cond ~ /Squall/) { emoji=\"🌬️\" } \
     else if(cond ~ /Tornado/) { emoji=\"🌪️\" } \
+    else if(cond ~ /Light drizzle/) { emoji=\"🌂\" } \
     else { emoji=\"🌈\" }; \
     print emoji\" \"temp }')\""
 

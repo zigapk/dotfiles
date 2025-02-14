@@ -114,13 +114,6 @@
         desc = "Git browse";
       };
     }
-    # TODO: open finder in folder and same form explorer (reveal file in Finder)
-    # {
-    #   key = "<leader>gf";
-    #   options = {
-    #     desc = "Go to folder using Finder";
-    #   };
-    # }
     {
       action = "<cmd>LazyGit<CR>";
       key = "<leader>gl";
@@ -361,27 +354,23 @@
       enable = true;
       closeIfLastWindow = true;
       sortCaseInsensitive = true;
-      extraOptions.commands = {
-        # TODO: this method is not being called
-        hello.__raw = ''
-          function()
-            print("Hello world")
-          end
-        '';
-      };
 
       window = {
         mappings = {
-          "<C-c>" = "hello";
+          "<C-r>" = "openInExplorer";
         };
       };
 
       extraOptions.filesystem = {
         commands = {
-          # TODO: reveal file in finder
-          hello.__raw = ''
-            function()
-              print("Hello inside filesystem")
+          openInExplorer.__raw = ''
+            function(state)
+              local node = state.tree:get_node()
+              local path = node:get_id()
+              -- macOs: open file in default application in the background.
+              vim.fn.jobstart({ "open", "-R", path }, { detach = true })
+              -- Linux: open file in default application
+              vim.fn.jobstart({ "xdg-open", path }, { detach = true })
             end
           '';
         };
@@ -392,14 +381,10 @@
     ts-autotag.enable = true;
     ts-context-commentstring.enable = true;
     nvim-autopairs.enable = true;
-    # commentary.enable = true;
     bufferline = {
       enable = true;
       settings.options = {
         diagnostics = "nvim_lsp";
-        # TODO: make the tabs look rounded
-        # TODO: make tabs persist
-        # TODO: make db (delete buffer) not close an entire window
       };
     };
     dressing.enable = true;
@@ -452,15 +437,7 @@
     };
     tmux-navigator.enable = true;
     # TODO:
-    #   - persist undo tree
-    #   - tmux integration
-    #   - jump to closing paren or tag
-    #   - closing current buffer should not close all buffers
-    #   - code actions sometimes do not work
     #   - ai chat
-    #   - sg should take you to the right line, not just path
-    #   - biome support
-    #   - todo next/previous using <leader>tn and <leader>tp
     #   - go to next/previous error
     #   - view entie errors
 
@@ -752,15 +729,6 @@
           "<C-Space>" = "cmp.mapping.complete()";
           "<C-h>" = "cmp.mapping.close()";
           "<C-l>" = "cmp.mapping(cmp.mapping.confirm({ select = true }), {'i', 's'})";
-          # "<CR>" = "cmp.mapping.confirm({ select = true })";
-          # "<S-CR>" = "cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })";
-          # "<C-h>" = ''
-          #   cmp.mapping(function()
-          #     if luasnip.locally_jumpable(-1) then
-          #       luasnip.jump(-1)
-          #     end
-          #   end, { 'i', 's' })
-          # '';
         };
       };
     };

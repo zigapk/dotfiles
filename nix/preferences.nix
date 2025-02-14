@@ -18,8 +18,8 @@ in
     autohide = true;
     persistent-apps = [
       "/Applications/1Password.app"
-      "Applications/Ghostty.app"
-      "${pkgs.arc-browser}/Applications/Arc.app"
+      "/Applications/Ghostty.app"
+      "/Applications/Zen Browser.app"
     ];
     largesize = 70;
     magnification = true;

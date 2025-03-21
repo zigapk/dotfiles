@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{ pkgs }: {
   enable = true;
   lfs.enable = true;
   userName = "Žiga Patačko Koderman";
@@ -21,8 +17,10 @@
       ignorecase = true;
     };
     gpg = {
-      ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      ssh.program =
+        if pkgs.stdenv.isDarwin
+        then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+        else "${pkgs._1password-gui}/bin/op-ssh-sign";
     };
-
   };
 }

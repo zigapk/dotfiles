@@ -15,6 +15,7 @@
     expandtab = true;
     scrolloff = 10;
     clipboard = "unnamedplus";
+    ignorecase = true;
   };
   autoCmd = [
     # Vertically center when entering insert mode
@@ -28,22 +29,6 @@
     maplocalleader = " ";
   };
   keymaps = [
-    # {
-    #   action = "\"_d";
-    #   key = "d";
-    #   mode = [ "n" "v" ];
-    #   options = {
-    #     desc = "Delete";
-    #   };
-    # }
-    # {
-    #   action = "\"_dd";
-    #   key = "dd";
-    #   mode = "v";
-    #   options = {
-    #     desc = "Delete line";
-    #   };
-    # }
     {
       action = ":m '>+1<CR>gv=gv";
       key = "J";
@@ -233,6 +218,27 @@
       key = "<leader>bdo";
       options = {
         desc = "Delete other buffers";
+      };
+    }
+    {
+      action = "<cmd>lua vim.diagnostic.goto_next()<cr>";
+      key = "<leader>en";
+      options = {
+        desc = "Error next";
+      };
+    }
+    {
+      action = "<cmd>lua vim.diagnostic.goto_prev()<cr>";
+      key = "<leader>ep";
+      options = {
+        desc = "Error prev";
+      };
+    }
+    {
+      action = "<cmd>lua vim.diagnostic.open_float()<cr>";
+      key = "<leader>ev";
+      options = {
+        desc = "Error view";
       };
     }
   ];
@@ -699,12 +705,6 @@
         sources = [
           { name = "nvim_lsp"; }
           { name = "emoji"; }
-          # {
-          #   name = "buffer"; # text within current buffer
-          #   option.get_bufnrs.__raw = "vim.api.nvim_list_bufs";
-          #   keywordLength = 3;
-          # }
-          # { name = "copilot"; } # enable/disable copilot
           {
             name = "path"; # file system paths
             keywordLength = 3;

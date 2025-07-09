@@ -1,5 +1,4 @@
 { pkgs
-, config
 , username
 , homeDirectory
 , emoji
@@ -20,7 +19,7 @@
       }
       else { };
 
-    stateVersion = "24.11";
+    stateVersion = "25.05";
   };
 
   # Let Home Manager install and manage itself.
@@ -28,6 +27,7 @@
 
   imports = [
     ./zsh.nix
+    ./hyprland.nix
   ];
 
   programs = {
@@ -45,6 +45,7 @@
       enableZshIntegration = true;
       nix-direnv.enable = true;
     };
+    ghostty = import ./ghostty.nix { inherit pkgs; };
     nixvim = import ./nixvim.nix { inherit pkgs; };
   };
 }

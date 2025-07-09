@@ -38,7 +38,7 @@
       nixvim.homeManagerModules.nixvim
     ];
     users.zigapk = import ../home/home.nix {
-      emoji = "🐙";
+      emoji = "🦄";
       inherit username homeDirectory config pkgs;
     };
   };

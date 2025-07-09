@@ -45,11 +45,12 @@
       top = "btop";
       cat = "bat";
       dinit = "echo \"use nix\" >> .envrc && direnv allow";
+      finit = "echo \"use flake\" >> .envrc && direnv allow";
       wttr = "curl wttr.in/Ljubljana";
       weather = "curl wttr.in/Ljubljana";
       v = "nvim .";
     };
-    initExtra = ''
+    initContent = ''
       ZSH_DISABLE_COMPFIX=true
       export EDITOR=nvim
       export VISUAL="nvim"

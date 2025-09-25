@@ -1,17 +1,15 @@
-{
-  config,
-  pkgs,
-  lib,
-  hostname,
-  nixvim,
-  username,
-  homeDirectory,
-  home-manager,
-  emoji,
-  walker,
-  ...
-}:
-{
+{ config
+, pkgs
+, lib
+, hostname
+, nixvim
+, username
+, homeDirectory
+, home-manager
+, emoji
+, walker
+, ...
+}: {
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
     "nix-command"

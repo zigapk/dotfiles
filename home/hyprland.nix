@@ -72,7 +72,7 @@ in
           # Terminal, filemanager, browser, etc.
           "$mainMod, RETURN, exec, ghostty"
           "$mainMod, Q, killactive"
-          "$mainMod SHIFT, M, exit"
+          "$mainMod, M, exit"
           "$mainMod, E, exec, nautilus --new-window"
           "$mainMod, B, exec, chromium --ozone-platform-hint=auto --enable-features=UseOzonePlatform,TouchpadOverscrollHistoryNavigation --ozone-platform=wayland --disable-session-crashed-bubble"
           "$mainMod, S, exec, slack --enable-features=UseOzonePlatform,WaylandWindowDecorations,WebRTCPipeWireCapturer --ozone-platform=wayland"

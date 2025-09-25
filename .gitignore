@@ -3,3 +3,6 @@
 .direnv/
 .envrc
 result/
+
+.gemini/
+gha-creds-*.json

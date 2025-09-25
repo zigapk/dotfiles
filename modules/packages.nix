@@ -64,4 +64,5 @@ with pkgs; [
   # ⌨️ Libraries & Firmware
   libqalculate
   qmk
+  alsa-utils
 ]

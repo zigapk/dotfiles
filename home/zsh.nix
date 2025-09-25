@@ -41,11 +41,10 @@
       lta = "lt -a";
       ff = "fzf --preview 'bat --style=numbers --color=always {}'";
       wake-kibla = "ssh router \"for i in {1..10}; do wakeonlan -i 192.168.0.255 b2:b7:37:b5:43:f4; sleep 0.4; done\"";
-      htop = "btop";
-      top = "btop";
+      htop = "btop -u 1000";
+      top = "btop -u 1000";
       cat = "bat";
-      dinit = "echo \"use nix\" >> .envrc && direnv allow";
-      finit = "echo \"use flake\" >> .envrc && direnv allow";
+      finit = "rm -rf .envrc .direnv && echo \"use flake\" >> .envrc && direnv allow";
       wttr = "curl wttr.in/Ljubljana";
       weather = "curl wttr.in/Ljubljana";
       v = "nvim .";
@@ -91,7 +90,6 @@
         "kubectl"
         "kubectx"
         "rust"
-        "command-not-found"
         "pass"
         "helm"
       ];

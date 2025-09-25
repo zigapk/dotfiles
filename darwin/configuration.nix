@@ -35,7 +35,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     sharedModules = [
-      nixvim.homeManagerModules.nixvim
+      nixvim.homeModules.nixvim
     ];
     users.zigapk = import ../home/home.nix {
       emoji = "🦄";

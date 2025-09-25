@@ -30,6 +30,15 @@
   };
   keymaps = [
     {
+      action = "<Esc>";
+      key = "jj";
+      mode = "i";
+      options = {
+        desc = "Escape insert mode";
+        noremap = true;
+      };
+    }
+    {
       action = ":m '>+1<CR>gv=gv";
       key = "J";
       mode = "v";
@@ -588,9 +597,9 @@
           "*.gif"
           "*.webp"
         ];
-        maxHeightWindowPercentage = 25;
-        tmuxShowOnlyInActiveWindow = true;
-        settings.integrations = {
+        tmux_show_only_in_active_window = true;
+        max_height_window_percentage = 25;
+        integrations = {
           markdown = {
             enabled = true;
             downloadRemoteImages = true;
@@ -632,28 +641,61 @@
     lsp = {
       enable = true;
       servers = {
-        # Average webdev LSPs
-        # ts-ls.enable = true; # TS/JS
-        ts_ls.enable = true; # TS/JS
+        ts_ls = {
+          enable = true;
+          # Disable if deno is in use within a project
+          extraOptions = {
+            single_file_support = false;
+            unstable = true;
+            root_dir = {
+              __raw = ''
+                function(fname)
+                  local util = require("lspconfig.util")
+                  -- if this is a Deno project, don't start tsserver
+                  if util.root_pattern("deno.json", "deno.jsonc")(fname) then
+                    return nil
+                  end
+                  -- otherwise treat it like a normal TS/JS project:
+                  return util.root_pattern("package.json", "tsconfig.json", ".git")(fname)
+                end
+              '';
+            };
+          };
+        };
         cssls.enable = true; # CSS
         html.enable = true; # HTML
-        astro.enable = true; # AstroJS
-        phpactor.enable = true; # PHP
-        svelte.enable = false; # Svelte
-        vuels.enable = false; # Vue
         pyright.enable = true; # Python
         marksman.enable = true; # Markdown
         nil_ls.enable = true; # Nix
         dockerls.enable = true; # Docker
         bashls.enable = true; # Bash
-        clangd.enable = true; # C/C++
         yamlls.enable = true; # YAML
         eslint.enable = true;
         biome.enable = true;
+        denols = {
+          enable = false;
+          settings = {
+            enable = true;
+            lint = true;
+            suggest = {
+              imports = {
+                hosts = {
+                  "https://deno.land" = true;
+                  "https://cdn.nest.land" = true;
+                  "https://crux.land" = true;
+                };
+              };
+            };
+          };
+          extraOptions = {
+            rootDir = ''require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")'';
+            single_file_support = false;
+          };
+        };
         ltex = {
           enable = true;
           settings = {
-            enabled = [ "astro" "html" "latex" "markdown" "text" "tex" "gitcommit" ];
+            enabled = [ "html" "latex" "markdown" "text" "tex" "gitcommit" ];
             completionEnabled = true;
             language = "en-US de-DE nl";
           };
@@ -752,12 +794,14 @@
 
     lspkind = {
       enable = true;
-      symbolMap = {
-        Copilot = "";
-      };
-      extraOptions = {
-        maxwidth = 50;
-        ellipsis_char = "...";
+      settings = {
+        symbolMap = {
+          Copilot = "";
+        };
+        extraOptions = {
+          maxwidth = 50;
+          ellipsis_char = "...";
+        };
       };
     };
   };
@@ -771,7 +815,7 @@
     vim.api.nvim_create_autocmd("BufWritePre", {
       pattern = "*",
       callback = function(args)
-        vim.lsp.buf.format()
+        vim.lsp.buf.format({ timeout_ms = 2000 })
       end,
     })
   '';

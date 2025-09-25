@@ -1,5 +1,6 @@
 { config
 , pkgs
+, lib
 , hostname
 , nixvim
 , username
@@ -7,10 +8,17 @@
 , home-manager
 , emoji
 , zen-browser
+, walker
 , ...
 }: {
   nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  hardware.enableAllFirmware = true;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -19,11 +27,15 @@
   networking.hostName = hostname;
   networking.networkmanager.enable = true;
 
+  # Dynamicall linked executables support
+  programs.nix-ld.enable = true;
   # Set your time zone.
   time.timeZone = "Europe/Ljubljana";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+
+  xdg.icons.enable = true;
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "sl_SI.UTF-8";
@@ -40,17 +52,31 @@
   imports = [
     # Home manager modules
     home-manager.nixosModules.home-manager
-    ./modules/kanata
+    ./modules/pipewire.nix
+    ./modules/auto-sleep.nix
+    ./modules/power-management.nix
+    ./modules/fonts.nix
+    ./modules/keyd.nix
+    ./modules/printers.nix
   ];
 
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     sharedModules = [
-      nixvim.homeManagerModules.nixvim
+      nixvim.homeModules.nixvim
+      walker.homeManagerModules.default
     ];
     users.zigapk = import ./home/home.nix {
-      inherit emoji username homeDirectory config pkgs;
+      inherit
+        lib
+        emoji
+        username
+        homeDirectory
+        config
+        pkgs
+        walker
+        ;
     };
   };
 
@@ -60,40 +86,38 @@
 
   # Use UWSM as session manager
   programs.uwsm.enable = true;
-  programs.uwsm.waylandCompositors = {
-    #   hyprland = {
-    #     prettyName = "Hyprland";
-    #     comment = "Hyprland compositor manager by UWSM";
-    #     binPath = "/etc/profiles/per-user/${username}/bin/hyprland";
-    #   };
-  };
   services.xserver.desktopManager.runXdgAutostartIfNone = true;
   programs.hyprland.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   programs.hyprland.withUWSM = true;
 
-  programs.thunar = {
-    enable = true;
-    plugins = with pkgs.xfce; [
-      thunar-archive-plugin
-      thunar-media-tags-plugin
-      thunar-volman
-    ];
-  };
   services.gvfs.enable = true;
   services.tumbler.enable = true;
 
   environment.enableAllTerminfo = true;
+  hardware.keyboard.qmk.enable = true;
 
   # Enable greetd
   services.greetd = {
     enable = true;
     settings = {
+      # default_session = {
+      #   command = "tuigreet --cmd \"uwsm start default\"";
+      # };
       default_session = {
-        command = "tuigreet --cmd \"uwsm start default\"";
+        user = username;
+        command = "uwsm start default";
       };
     };
   };
+
+  systemd.services.fprintd = {
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.Type = "simple";
+  };
+  services.fprintd.enable = true;
+  services.fprintd.tod.enable = true;
+  services.fprintd.tod.driver = pkgs.libfprint-2-tod1-goodix;
 
   # Bluetooth
   hardware.bluetooth.enable = true; # enables support for Bluetooth
@@ -106,28 +130,51 @@
 
   # Enable sudo without password
   security.sudo.wheelNeedsPassword = false;
+  security.pam.loginLimits = [
+    {
+      domain = "*";
+      type = "soft";
+      item = "nofile";
+      value = "65536";
+    }
+    {
+      domain = "*";
+      type = "hard";
+      item = "nofile";
+      value = "1048576";
+    }
+  ];
 
   # Define a user account
   users.users.zigapk = {
     isNormalUser = true;
     description = "Žiga Patačko Koderman";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [ bluetui firefox ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+    ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG5r1Mt9pLlX7cA8F6ZVZSkrP/k9sPVSrSbeNSnyumrY"
+    ];
   };
 
   # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    iw
-    pciutils
-    greetd.tuigreet
-    autopsy
-    perl
-    unzip
-    sleuthkit
-    dysk
-    zen-browser.packages."x86_64-linux".default
-  ];
+  environment.systemPackages = import ./modules/packages.nix { inherit pkgs zen-browser; };
+
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    # Certain features, including CLI integration and system authentication support,
+    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
+    polkitPolicyOwners = [ username ];
+  };
+
+  programs.nix-index = {
+    enable = true;
+    enableZshIntegration = false;
+    enableBashIntegration = false;
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -138,31 +185,31 @@
   # };
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
+    };
+  };
+  services.tailscale.enable = true;
   system.stateVersion = "25.05";
 
-  # Picerija
-  services.caddy = {
-    enable = true;
-    virtualHosts."pica.ziga.pk".extraConfig = ''
-      reverse_proxy localhost:8765
-    '';
-  };
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  services.upower.enable = true;
+  services.dbus.enable = true;
 
-  #   systemd.services.pica = {
-  #     enable = true;
-  #     description = "Pica";
-  #     after = [ "network.target" ];
-  #     wantedBy = [ "multi-user.target" ];
-  #
-  #     serviceConfig = {
-  #       ExecStart = "/bin/sh -c \"cd /home/zigapk/twilio-picerija/ && /run/current-system/sw/bin/nix develop --command python3 server.py\"";
-  #       Restart = "always";
-  #       RestartSec = 5;
-  #       StandardOutput = "journal";
-  #       StandardError = "journal";
-  #       User = "zigapk"; # Uncomment if you want it under a specific user
-  #     };
-  #   };
+  # Install docker but don't run it by default
+  virtualisation.docker.enable = true;
+  systemd.services."docker.service".enable = false;
+
+  security.pam.services.hyprlock = {
+    enable = true;
+    fprintAuth = true;
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    22
+    80
+    443
+  ];
 }

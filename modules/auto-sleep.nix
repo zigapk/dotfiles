@@ -1,8 +1,6 @@
 _: {
-  services.logind = {
-    lidSwitch = "suspend";
-    lidSwitchDocked = "ignore";
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchDocked = "ignore";
   };
-
-  # TODO: lock on suspend
 }

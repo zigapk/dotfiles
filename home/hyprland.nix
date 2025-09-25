@@ -22,25 +22,19 @@ in
 
       exec-once = [
         # "hyprlock"
-        # "systemctl --user start hyprpolkitagent"
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
-        # "walker --gapplication-service"
         "waybar"
         "clipse -listen"
         "1password --ozone-platform=wayland --enable-features=UseOzonePlatform --slient"
       ];
 
-      # monitor = [ "eDP-1,2280x1920@120,0x0,1" ];
       monitor = [
         "eDP-1, preferred, 0x0, 1.5" # Built-in monitor
         # "DP-2, preferred, auto-up, 1"
-        # "desc:BOE NE135A1M-NY1, preferred, auto-up, 1"
-        # "DP-3, preferred, auto-up, 1" this is low-ress monitor at the hilly part of the office
         "desc:Lenovo Group Limited LEN L27q-30 U161CGDL, preferred, auto-up, 1" # Old lenovo monitor at the office
         "desc:Lenovo Group Limited LEN L27q-30 U161CGC8, preferred, auto-up, 1" # Old lenovo monitor at the office
         "desc:Dell Inc. DELL S3221QS G2MHB33, preferred, auto-up, 1" # Dell at home
         " , preferred, auto-up, 1.333333" # Default for external monitors
-        # ", preferred, auto, 1, mirror, DP-1" # Mirroring option for external monitors
       ];
 
       windowrulev2 = [
@@ -68,7 +62,6 @@ in
         "GDK_SCALE,1"
         "XCURSOR_SIZE,24"
         "GTK_THEME,Papirus-Dark"
-        # "QT_QPA_PLATFORMTHEME,qt5ct"
       ];
 
       bind =
@@ -79,20 +72,14 @@ in
           # Terminal, filemanager, browser, etc.
           "$mainMod, RETURN, exec, ghostty"
           "$mainMod, Q, killactive"
-          "$mainMod, M, exit"
+          "$mainMod SHIFT, M, exit"
           "$mainMod, E, exec, nautilus --new-window"
           "$mainMod, B, exec, chromium --ozone-platform-hint=auto --enable-features=UseOzonePlatform,TouchpadOverscrollHistoryNavigation --ozone-platform=wayland --disable-session-crashed-bubble"
           "$mainMod, S, exec, slack --enable-features=UseOzonePlatform,WaylandWindowDecorations,WebRTCPipeWireCapturer --ozone-platform=wayland"
-          "$mainMod, I, exec, 1password --quick-access"
 
           # Lock on power button
           ", XF86PowerOff, exec, hyprlock"
 
-          # Mod+something helpers
-          "$mainMod, X, exec, wtype -P XF86Cut"
-          "$mainMod, C, exec, wtype -P XF86Copy"
-          "$mainMod, V, exec, wtype -P XF86Paste"
-          # "$mainMod, A, exec, wtype -M ctrl -k a -m ctrl"
           "$mainMod, Left, exec, wtype -k Home"
           "$mainMod, Right, exec, wtype -k End"
 
@@ -130,7 +117,7 @@ in
           ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
           ", XF86MonBrightnessUp, exec, brightnessctl set 10%+"
           ", XF86MonBrightnessDown, exec, brightnessctl set 10%-"
-          ", XF86WLAN, exec, nmcli radio wifi toggle" # TODO: this does not work
+          ", XF86WLAN, exec, nmcli radio wifi toggle"
           ", XF86Refresh, exec, xdotool key F5"
 
           # Move focus with hjkl
@@ -180,18 +167,9 @@ in
         "$mainMod, mouse:273, resizewindow"
       ];
 
-      # Bind with s (separate - e.g. wait for both to be pressed) and e (repeat - repeats the key while holding)
-      # TODO
-      bindse = [
-        ", space&h, sendshortcut, left"
-        ", space&j, sendshortcut, down"
-        ", space&k, sendshortcut, up"
-        ", space&l, sendshortcut, right"
-      ];
-
       binde = [
-        "$mainMod, equal,  resizeactive,  15  0"
-        "$mainMod, minus, resizeactive, -15 0"
+        "$mainMod, equal,  resizeactive,  10  0"
+        "$mainMod, minus, resizeactive, -10 0"
         "$mainMod shift, equal, resizeactive, 0 -10"
         "$mainMod shift, minus, resizeactive, 0 10"
       ];
@@ -200,7 +178,6 @@ in
         kb_layout = "us,si";
         kb_variant = ",us";
         follow_mouse = 1;
-        # kb_options = "altwin:swap_lalt_lwin,altwin:swap_ralt_rwin,grp:alt_shift_toggle,ctrl:nocaps";
         kb_options = "grp:alt_shift_toggle";
         touchpad = {
           clickfinger_behavior = "1";
@@ -260,15 +237,11 @@ in
           "windowsOut, 1, 3, md3_accel, popin 60%"
           "border, 1, 10, default"
           "fade, 1, 3, md3_decel"
-          # "layers, 1, 2, md3_decel, slide"
           "layersIn, 1, 3, menu_decel, slide"
           "layersOut, 1, 1.6, menu_accel"
           "fadeLayersIn, 1, 2, menu_decel"
           "fadeLayersOut, 1, 4.5, menu_accel"
           "workspaces, 1, 7, menu_decel, slide"
-          # "workspaces, 1, 2.5, softAcDecel, slide"
-          # "workspaces, 1, 7, menu_decel, slidefade 15%"
-          # "specialWorkspace, 1, 3, md3_decel, slidefadevert 15%"
           "specialWorkspace, 1, 3, md3_decel, slidevert"
         ];
       };

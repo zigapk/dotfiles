@@ -2,3 +2,4 @@
 .null-ls*
 .direnv/
 .envrc
+result/

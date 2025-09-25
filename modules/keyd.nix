@@ -11,9 +11,6 @@ _: {
           main = {
             # Maps CapsLock → Esc when tapped, Ctrl when held
             capslock = "overload(control, esc)";
-
-            # Remaps the Escape key to CapsLock
-            # esc = "capslock";
           };
         };
 

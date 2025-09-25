@@ -1,11 +1,8 @@
-{
-  pkgs,
-  lib,
-  username,
-  homeDirectory,
-  emoji,
-  walker,
-  ...
+{ pkgs
+, username
+, homeDirectory
+, emoji
+, ...
 }:
 let
   onePassPath = "~/.1password/agent.sock";
@@ -41,9 +38,6 @@ in
     stateVersion = "25.05";
   };
 
-  programs.home-manager.enable = true;
-  programs.kitty.enable = true;
-
   gtk = {
     enable = true;
     cursorTheme = {
@@ -60,33 +54,16 @@ in
     };
   };
 
-  # xdg.configFile = {
-  #   qt5ct = {
-  #     target = "qt5ct/qt5ct.conf";
-  #     text = lib.generators.toINI { } {
-  #       Appearance = {
-  #         icon_theme = "Papirus-Dark";
-  #       };
-  #     };
-  #   };
-  #   qt6ct = {
-  #     target = "qt6ct/qt6ct.conf";
-  #     text = lib.generators.toINI { } {
-  #       Appearance = {
-  #         icon_theme = "Papirus-Dark";
-  #       };
-  #     };
-  #   };
-  # };
-
   imports = [
     ./zsh.nix
     ./hyprland.nix
     ./electron.nix
     ./waybar
   ];
-
   programs = {
+    home-manager.enable = true;
+    kitty.enable = true;
+
     git = import ./git.nix { inherit pkgs; };
     carapace = {
       enable = true;
@@ -101,13 +78,19 @@ in
       nix-direnv.enable = true;
     };
     nixvim = import ./nixvim.nix { inherit pkgs; };
+
     ssh = {
       enable = true;
-      extraConfig = ''
-        Host *
-            IdentityAgent ${onePassPath}
-      '';
+      enableDefaultConfig = false;
+      matchBlocks = {
+        "*" = {
+          extraOptions = {
+            IdentityAgent = onePassPath;
+          };
+        };
+      };
     };
+
     ghostty = {
       enable = true;
       enableZshIntegration = true;
@@ -115,8 +98,91 @@ in
         font-size = 12;
       };
     };
+
+    walker = {
+      enable = true;
+      runAsService = true;
+
+      config = {
+        close_when_opened = true;
+        disabled = [
+          "runner"
+          "websearch"
+          "ssh"
+        ];
+        app_launch_prefix = "uwsm app -- ";
+        builtins = {
+          hyprland_keybinds = {
+            show_sub_when_single = true;
+            path = "~/.config/hypr/hyprland.conf";
+            weight = 5;
+            name = "hyprland_keybinds";
+            placeholder = "Hyprland Keybinds";
+            switcher_only = true;
+            hidden = true;
+          };
+          xdph_picker = {
+            hidden = true;
+            weight = 5;
+            placeholder = "Screen/Window Picker";
+            show_sub_when_single = true;
+            name = "xdphpicker";
+            switcher_only = true;
+          };
+          calc = {
+            require_number = true;
+            weight = 5;
+            name = "Calculator";
+            icon = "accessories-calculator";
+            placeholder = "Calculator";
+            min_chars = 3;
+            prefix = "=";
+          };
+          clipboard = {
+            always_put_new_on_top = true;
+            weight = 5;
+            name = "clipboard";
+            avoid_line_breaks = true;
+            placeholder = "Clipboard";
+            image_height = 300;
+            switcher_only = false;
+            hidden = false;
+            prefix = "@";
+          };
+          emojis = {
+            exec = "wl-copy";
+            weight = 5;
+            name = "Emojis";
+            placeholder = "Emojis";
+            switcher_only = true;
+            history = true;
+            typeahead = true;
+            show_unqualified = false;
+            prefix = ":";
+          };
+          finder = {
+            use_fd = true;
+            fd_flags = "--ignore-vcs --type file --type directory";
+            cmd_alt = "xdg-open $(dirname ~/%RESULT%)";
+            weight = 5;
+            icon = "file";
+            name = "Finder";
+            placeholder = "Finder";
+            switcher_only = true;
+            ignore_gitignore = true;
+            refresh = true;
+            concurrency = 8;
+            show_icon_when_single = true;
+            preview_images = true;
+            hidden = false;
+            prefix = ".";
+          };
+        };
+      };
+    };
   };
 
+  # Notification daemon
   services.dunst = {
     enable = true;
     settings = {
@@ -147,93 +213,10 @@ in
     };
   };
 
-  programs.walker = {
-    enable = true;
-    runAsService = true;
-
-    config = {
-      close_when_opened = true;
-      disabled = [
-        "runner"
-        "websearch"
-        "ssh"
-      ];
-      app_launch_prefix = "uwsm app -- ";
-      builtins = {
-        hyprland_keybinds = {
-          show_sub_when_single = true;
-          path = "~/.config/hypr/hyprland.conf";
-          weight = 5;
-          name = "hyprland_keybinds";
-          placeholder = "Hyprland Keybinds";
-          switcher_only = true;
-          hidden = true;
-        };
-        xdph_picker = {
-          hidden = true;
-          weight = 5;
-          placeholder = "Screen/Window Picker";
-          show_sub_when_single = true;
-          name = "xdphpicker";
-          switcher_only = true;
-        };
-        calc = {
-          require_number = true;
-          weight = 5;
-          name = "Calculator";
-          icon = "accessories-calculator";
-          placeholder = "Calculator";
-          min_chars = 3;
-          prefix = "=";
-        };
-        clipboard = {
-          always_put_new_on_top = true;
-          weight = 5;
-          name = "clipboard";
-          avoid_line_breaks = true;
-          placeholder = "Clipboard";
-          image_height = 300;
-          switcher_only = false;
-          hidden = false;
-          prefix = "@";
-        };
-        emojis = {
-          exec = "wl-copy";
-          weight = 5;
-          name = "Emojis";
-          placeholder = "Emojis";
-          switcher_only = true;
-          history = true;
-          typeahead = true;
-          show_unqualified = false;
-          prefix = ":";
-        };
-        finder = {
-          use_fd = true;
-          fd_flags = "--ignore-vcs --type file --type directory";
-          cmd_alt = "xdg-open $(dirname ~/%RESULT%)";
-          weight = 5;
-          icon = "file";
-          name = "Finder";
-          placeholder = "Finder";
-          switcher_only = true;
-          ignore_gitignore = true;
-          refresh = true;
-          concurrency = 8;
-          show_icon_when_single = true;
-          preview_images = true;
-          hidden = false;
-          prefix = ".";
-        };
-      };
-    };
-  };
-
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-hyprland
-      xdg-desktop-portal-gtk
     ];
   };
 }

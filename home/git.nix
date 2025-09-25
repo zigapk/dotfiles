@@ -1,5 +1,4 @@
-{ pkgs }:
-{
+{ pkgs }: {
   enable = true;
   lfs.enable = true;
   userName = "Žiga Patačko Koderman";
@@ -10,6 +9,9 @@
   extraConfig = {
     pull = {
       rebase = false;
+    };
+    push = {
+      autoSetupRemote = true;
     };
     init = {
       defaultBranch = "master";

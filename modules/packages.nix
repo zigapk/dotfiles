@@ -1,15 +1,14 @@
-{ pkgs
-, zen-browser
-,
-}:
+{ pkgs }:
 let
   codex = pkgs.callPackage ./codex.nix { };
 in
-with pkgs; [
+with pkgs;
+[
   # TODO: move some (most) of this into home manager packages
   iw
   fd
   uv
+  gnupg
   qmk
   fastfetch
   pciutils
@@ -22,7 +21,6 @@ with pkgs; [
   codex
   sleuthkit
   dysk
-  zen-browser.packages."x86_64-linux".default
   slack
   magic-wormhole
   firefox
@@ -52,7 +50,6 @@ with pkgs; [
   anydesk
   opencode
   killall
-  nwg-dock-hyprland
   overskride
   playerctl
   bruno

@@ -1,10 +1,11 @@
-{ pkgs
-, lib
-, username
-, homeDirectory
-, emoji
-, walker
-, ...
+{
+  pkgs,
+  lib,
+  username,
+  homeDirectory,
+  emoji,
+  walker,
+  ...
 }:
 let
   onePassPath = "~/.1password/agent.sock";
@@ -83,7 +84,6 @@ in
     ./hyprland.nix
     ./electron.nix
     ./waybar
-    ./nwg-dock-hyprland
   ];
 
   programs = {

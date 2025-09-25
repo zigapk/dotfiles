@@ -1,21 +1,16 @@
 # Nix config and all the other dot files
 
-## Usage
-
-1. Install nix by running `sh <(curl -L https://nixos.org/nix/install)`.
-2. Clone this repo into `~/dotfiles`.
-3. Possibly change the brew from existing installation to a new one [docs here](https://github.com/zhaofengli/nix-homebrew?tab=readme-ov-file#a-new-installation).
-4. Each time you want to switch to the new configuration, run:
+First, clone the repo:
 
 ```bash
-darwin-rebuild switch --flake ~/dotfiles/nix
+git clone https://github.com/zigapk/dotfiles.git
 ```
 
-5. Restore some configurations that cannot be automated:
-   - Raycast: Import `Raycast [TIME].rayconfig` (encryption password is saved in 1password).
-   - Rectangle: Import the preferences from `RectangleConfig.json`.
-6. Reboot for some changes to take effect (input sources, etc.).
-7. Install Docker (Desktop) - at the time of writing, Docker is not supported on Nix Darwin.
+To apply this configuration on NixOS, run:
+
+```bash
+nixos-rebuild switch --flake ~/dotfiles/nix
+```
 
 Then to update the configuration, run:
 

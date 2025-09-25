@@ -1,6 +1,0 @@
-theme = "Dracula"
-background-opacity = 0.9
-background-blur-radius = 30
-font-size = 13
-quit-after-last-window-closed = true
-

@@ -1,16 +1,17 @@
-{ config
-, pkgs
-, lib
-, hostname
-, nixvim
-, username
-, homeDirectory
-, home-manager
-, emoji
-, zen-browser
-, walker
-, ...
-}: {
+{
+  config,
+  pkgs,
+  lib,
+  hostname,
+  nixvim,
+  username,
+  homeDirectory,
+  home-manager,
+  emoji,
+  walker,
+  ...
+}:
+{
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
     "nix-command"
@@ -160,7 +161,7 @@
   };
 
   # List packages installed in system profile. To search, run:
-  environment.systemPackages = import ./modules/packages.nix { inherit pkgs zen-browser; };
+  environment.systemPackages = import ./modules/packages.nix { inherit pkgs; };
 
   programs._1password.enable = true;
   programs._1password-gui = {

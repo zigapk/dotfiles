@@ -6,10 +6,14 @@ with pkgs; [
   bruno
   bruno-cli
   gemini-cli-bin
+  claude-code
+  opencode
+  rpi-imager
 
   # 🌐 Web & Communication
   firefox
   chromium
+  google-chrome
   slack
   anydesk
   transmission_4-gtk
@@ -22,6 +26,10 @@ with pkgs; [
   gradia
   imagemagick
   playerctl
+  pandoc
+  librsvg
+  texliveFull
+  obsidian
 
   # ⚙️ Core CLI Utilities
   fd
@@ -33,25 +41,9 @@ with pkgs; [
   unzip
   poppler-utils
 
-  # 🖥️ Hyprland & Wayland Integration
-  xdg-desktop-portal-hyprland
-  hyprshot
-  hyprpicker
-  wl-clipboard
-  wtype
-  clipse
-  qt5.qtwayland
-  qt6.qtwayland
-
   # 🛠️ System & Disk Management
-  nautilus
-  file-roller
-  gnome-disk-utility
   gparted
-  overskride
-  brightnessctl
-  polkit_gnome
-  tuigreet
+  dconf
 
   # 🔒 Security & Networking
   gnupg
@@ -65,4 +57,11 @@ with pkgs; [
   libqalculate
   qmk
   alsa-utils
+
+  # 📦 Gnome Extensions
+  gnomeExtensions.focus-changer
+  gnomeExtensions.pano
+
+  # Languages and Frameworks
+  python314
 ]

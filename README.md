@@ -20,15 +20,11 @@ nix flake update --flake ~/dotfiles/nix/.
 
 TODO:
 
-- crush
-- nur
-- more wallpapers
+- STICKY KEYS
+- remove SUPER to reveal search
+- wallpaper(s)
+- alt + h/l inside neovim
+- tlp switcher
 - nix search
 - make sure docker is not running by default!
-- notifications focus mode
-- stylish polkit agent
 - flash.nvim
-- low battery notification
-- alt + tab moving between tabs
-- test gnome + tiling extension
-- test cosmic desktop beta

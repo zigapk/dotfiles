@@ -28,8 +28,17 @@
 
   # Dynamicall linked executables support
   programs.nix-ld.enable = true;
+
   # Set your time zone.
   time.timeZone = "Europe/Ljubljana";
+
+  # Cleanup nix store automatically
+
+  nix.gc.automatic = true;
+  nix.gc.dates = "daily";
+  nix.gc.options = "--delete-older-than 30d";
+
+  nix.settings.auto-optimise-store = true;
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -51,8 +60,8 @@
   imports = [
     # Home manager modules
     home-manager.nixosModules.home-manager
+    ./modules/gnome.nix
     ./modules/pipewire.nix
-    ./modules/auto-sleep.nix
     ./modules/power-management.nix
     ./modules/fonts.nix
     ./modules/keyd.nix
@@ -83,32 +92,13 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  # Use UWSM as session manager
-  programs.uwsm.enable = true;
-  services.xserver.desktopManager.runXdgAutostartIfNone = true;
-  programs.hyprland.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
-  programs.hyprland.withUWSM = true;
 
   services.gvfs.enable = true;
   services.tumbler.enable = true;
 
   environment.enableAllTerminfo = true;
   hardware.keyboard.qmk.enable = true;
-
-  # Enable greetd
-  services.greetd = {
-    enable = true;
-    settings = {
-      # default_session = {
-      #   command = "tuigreet --cmd \"uwsm start default\"";
-      # };
-      default_session = {
-        user = username;
-        command = "uwsm start default";
-      };
-    };
-  };
 
   systemd.services.fprintd = {
     wantedBy = [ "multi-user.target" ];
@@ -149,6 +139,7 @@
     isNormalUser = true;
     description = "Žiga Patačko Koderman";
     extraGroups = [
+      "dialout"
       "networkmanager"
       "wheel"
       "docker"
@@ -200,11 +191,6 @@
   # Install docker but don't run it by default
   virtualisation.docker.enable = true;
   systemd.services."docker.service".enable = false;
-
-  security.pam.services.hyprlock = {
-    enable = true;
-    fprintAuth = true;
-  };
 
   networking.firewall.allowedTCPPorts = [
     22

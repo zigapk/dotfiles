@@ -12,10 +12,14 @@ _: {
             # Maps CapsLock → Esc when tapped, Ctrl when held
             capslock = "overload(control, esc)";
           };
-        };
 
-        # no extraConfig needed for this simple setup
-        extraConfig = "";
+          # This new section defines the 'alt' layer
+          alt = {
+            # Maps alt+h to ctrl+shift+tab
+            h = "C-S-tab";
+            l = "C-tab";
+          };
+        };
       };
     };
   };

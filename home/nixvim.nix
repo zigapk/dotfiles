@@ -428,7 +428,7 @@
           nixpkgs_fmt.enable = true;
           google_java_format.enable = false;
           prettier = {
-            enable = true;
+            enable = false;
             disableTsServerFormatter = true;
           };
           black = {
@@ -670,7 +670,7 @@
         dockerls.enable = true; # Docker
         bashls.enable = true; # Bash
         yamlls.enable = true; # YAML
-        eslint.enable = true;
+        eslint.enable = false;
         biome.enable = true;
         denols = {
           enable = false;
@@ -695,7 +695,14 @@
         ltex = {
           enable = true;
           settings = {
-            enabled = [ "html" "latex" "markdown" "text" "tex" "gitcommit" ];
+            enabled = [
+              "html"
+              "latex"
+              "markdown"
+              "text"
+              "tex"
+              "gitcommit"
+            ];
             completionEnabled = true;
             language = "en-US de-DE nl";
           };
@@ -732,7 +739,9 @@
           completeopt = "menu,menuone,noinsert";
         };
         autoEnableSources = true;
-        experimental = { ghost_text = true; };
+        experimental = {
+          ghost_text = true;
+        };
         performance = {
           debounce = 60;
           fetchingTimeout = 200;
@@ -745,7 +754,13 @@
             end
           '';
         };
-        formatting = { fields = [ "kind" "abbr" "menu" ]; };
+        formatting = {
+          fields = [
+            "kind"
+            "abbr"
+            "menu"
+          ];
+        };
         sources = [
           { name = "nvim_lsp"; }
           { name = "emoji"; }
@@ -760,8 +775,12 @@
         ];
 
         window = {
-          completion = { border = "solid"; };
-          documentation = { border = "solid"; };
+          completion = {
+            border = "solid";
+          };
+          documentation = {
+            border = "solid";
+          };
         };
 
         mapping = {

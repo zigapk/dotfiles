@@ -48,6 +48,7 @@
       wttr = "curl wttr.in/Ljubljana";
       weather = "curl wttr.in/Ljubljana";
       v = "nvim .";
+      speedtest = "fast -u";
     };
     initContent = ''
       ZSH_DISABLE_COMPFIX=true

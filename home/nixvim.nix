@@ -250,6 +250,43 @@
         desc = "Error view";
       };
     }
+    {
+      mode = [
+        "n"
+        "x"
+      ];
+      key = "<leader>os";
+      action.__raw = ''
+        function()
+          require('opencode').select()
+        end
+      '';
+      options = {
+        desc = "opencode select";
+      };
+    }
+    {
+      mode = [
+        "n"
+        "x"
+      ];
+      key = "<leader>ot";
+      action = "<cmd>lua require('opencode').toggle()<cr>";
+      options = {
+        desc = "opencode toggle";
+      };
+    }
+    {
+      mode = [
+        "n"
+        "x"
+      ];
+      key = "<leader>o+";
+      action = "<cmd>lua require('opencode').prompt('@this')<cr>";
+      options = {
+        desc = "opencode add this";
+      };
+    }
   ];
   colorschemes.catppuccin.enable = true;
   plugins = {
@@ -370,7 +407,7 @@
       closeIfLastWindow = true;
       sortCaseInsensitive = true;
 
-      window = {
+      settings.window = {
         mappings = {
           "<C-r>" = "openInExplorer";
         };
@@ -451,11 +488,10 @@
       settings.current_line_blame = true;
     };
     tmux-navigator.enable = true;
-    # TODO:
-    #   - ai chat
-    #   - go to next/previous error
-    #   - view entie errors
-
+    opencode = {
+      enable = true;
+      # TODO: autoread
+    };
     markdown-preview = {
       enable = true;
       settings.theme = "dark";
@@ -481,6 +517,7 @@
         git.enable = true;
         words.enable = true;
         dim.enable = false;
+        picker.enable = true;
         dashboard = {
           enable = true;
           sections = [

@@ -69,6 +69,8 @@
           enabled-extensions = [
             pkgs.gnomeExtensions.focus-changer.extensionUuid
             pkgs.gnomeExtensions.pano.extensionUuid
+            pkgs.gnomeExtensions.blur-my-shell.extensionUuid
+            pkgs.gnomeExtensions.wallpaper-slideshow.extensionUuid
           ];
         };
         "org/gnome/shell/extensions/pano" = {
@@ -77,6 +79,21 @@
           play-audio-on-copy = false;
           keep-search-entry = false;
           wiggle-indicators = false;
+        };
+        "org/gnome/shell/extensions/blur-my-shell" = {
+          "applications/blur" = true;
+          "applications/whitelist" = [ "com.mitchellh.ghostty" ];
+          "applications/dynamic-opacity" = false;
+          "applications/sigma" = lib.gvariant.mkUint32 26;
+          "applications/opacity" = lib.gvariant.mkUint32 240;
+        };
+        "org/gnome/shell/extensions/azwallpaper" = {
+          "slideshow-directory" = "/home/zigapk/dotfiles/wallpapers";
+          "slideshow-slide-duration" = lib.gvariant.mkTuple [
+            (lib.gvariant.mkUint64 2)
+            (lib.gvariant.mkUint64 0)
+            (lib.gvariant.mkUint64 0)
+          ];
         };
         "org/gnomede/desktop/session" = {
           idle-delay = lib.gvariant.mkUint32 0;
@@ -95,6 +112,7 @@
             "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
             "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
             "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/"
           ];
           www = [ "<Super>b" ];
           search = [ "<Super>space" ];
@@ -115,7 +133,13 @@
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
           name = "Launch 1password";
           command = "1password";
-          binding = "<Super>p";
+          binding = "<Super>i";
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3" = {
+          name = "Launch nautilus";
+          command = "nautilus";
+          binding = "<Super>f";
         };
       };
     }

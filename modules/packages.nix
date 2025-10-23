@@ -40,6 +40,8 @@ with pkgs; [
   killall
   unzip
   poppler-utils
+  lsof
+  fast-cli
 
   # 🛠️ System & Disk Management
   gparted
@@ -61,6 +63,8 @@ with pkgs; [
   # 📦 Gnome Extensions
   gnomeExtensions.focus-changer
   gnomeExtensions.pano
+  gnomeExtensions.blur-my-shell
+  gnomeExtensions.wallpaper-slideshow
 
   # Languages and Frameworks
   python314

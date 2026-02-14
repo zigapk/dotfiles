@@ -1,7 +1,9 @@
-{ config
-, pkgs
-, ...
-}: {
+{
+  config,
+  pkgs,
+  ...
+}:
+{
   home.packages = with pkgs; [
     bat
     fzf
@@ -49,6 +51,7 @@
       weather = "curl wttr.in/Ljubljana";
       v = "nvim .";
       speedtest = "fast -u";
+      oc = "opencode";
     };
     initContent = ''
       ZSH_DISABLE_COMPFIX=true

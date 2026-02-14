@@ -2,7 +2,9 @@
   description = "Nix flake for managing all my machines";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -24,30 +26,27 @@
     walker.url = "github:abenz1267/walker/745d720fdb59965d6fe660fc835181619a179027";
   };
 
-  outputs =
-    {
-      nixpkgs,
-      home-manager,
-      nixvim,
-      flake-utils,
-      nix-index-database,
-      nixos-hardware,
-      walker,
-      ...
-    }@inputs:
-    let
-      username = "zigapk";
-    in
+  outputs = {
+    nixpkgs,
+    nixpkgs-stable,
+    home-manager,
+    nixvim,
+    flake-utils,
+    nix-index-database,
+    nixos-hardware,
+    walker,
+    ...
+  } @ inputs: let
+    username = "zigapk";
+  in
     flake-utils.lib.eachDefaultSystem (
-      system:
-      let
+      system: let
         pkgs = import nixpkgs {
           inherit system;
         };
-        nativeBuildInputs = with pkgs; [ ];
-        buildInputs = [ ];
-      in
-      {
+        nativeBuildInputs = with pkgs; [];
+        buildInputs = [];
+      in {
         devShells.default = pkgs.mkShell {
           inherit buildInputs nativeBuildInputs;
         };

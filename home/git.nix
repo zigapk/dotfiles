@@ -1,12 +1,14 @@
 { pkgs }: {
   enable = true;
   lfs.enable = true;
-  userName = "Žiga Patačko Koderman";
-  userEmail = "ziga@zerodays.dev";
   signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG5r1Mt9pLlX7cA8F6ZVZSkrP/k9sPVSrSbeNSnyumrY";
   signing.signByDefault = true;
 
-  extraConfig = {
+  settings = {
+    user = {
+      name = "Žiga Patačko Koderman";
+      email = "ziga@zerodays.dev";
+    };
     pull = {
       rebase = false;
     };

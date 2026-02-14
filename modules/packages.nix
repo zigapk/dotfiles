@@ -1,18 +1,35 @@
-{ pkgs }:
-with pkgs; [
+{
+  pkgs,
+  pkgs-stable,
+  pkgs-unstable,
+}:
+with pkgs;
+[
   # 🧑‍💻 Developer Tools
   vscode
   uv
   bruno
   bruno-cli
   gemini-cli-bin
-  claude-code
   opencode
+  pkgs-unstable.claude-code
+  awscli2
+  android-studio
   rpi-imager
 
   # 🌐 Web & Communication
   firefox
-  chromium
+  (chromium.override {
+    commandLineArgs = [
+      "--enable-features=AcceleratedVideoEncoder"
+      "--ignore-gpu-blocklist"
+      "--enable-zero-copy"
+      "--ozone-platform-hint=auto"
+      "--enable-features=UseOzonePlatform,TouchpadOverscrollHistoryNavigation"
+      "--ozone-platform=wayland"
+    ];
+    enableWideVine = true;
+  })
   google-chrome
   slack
   anydesk
@@ -20,6 +37,7 @@ with pkgs; [
 
   # 🎨 Creative & Multimedia
   gimp
+  inkscape
   loupe
   vlc
   figma-linux
@@ -42,6 +60,10 @@ with pkgs; [
   poppler-utils
   lsof
   fast-cli
+  ffmpeg
+  arduino-ide
+  arduino-cli
+  usbutils
 
   # 🛠️ System & Disk Management
   gparted
@@ -65,6 +87,7 @@ with pkgs; [
   gnomeExtensions.pano
   gnomeExtensions.blur-my-shell
   gnomeExtensions.wallpaper-slideshow
+  gnomeExtensions.bluetooth-battery-meter
 
   # Languages and Frameworks
   python314

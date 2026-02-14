@@ -1,15 +1,32 @@
-{ config
-, pkgs
-, lib
-, hostname
-, nixvim
-, username
-, homeDirectory
-, home-manager
-, emoji
-, walker
-, ...
-}: {
+{
+  config,
+  pkgs,
+  lib,
+  hostname,
+  nixvim,
+  username,
+  homeDirectory,
+  home-manager,
+  emoji,
+  walker,
+  inputs,
+  ...
+}:
+let
+  # Import the stable package set
+  pkgs-stable = import inputs.nixpkgs-stable {
+    # Use the same system as your unstable packages
+    inherit (pkgs) system;
+    # Allow unfree packages in stable as well
+    config.allowUnfree = true;
+  };
+  pkgs-unstable = import inputs.nixpkgs-unstable {
+    inherit (pkgs) system;
+    config.allowUnfree = true;
+  };
+  unused = "asdf";
+in
+{
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
     "nix-command"
@@ -18,6 +35,12 @@
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
   hardware.enableAllFirmware = true;
+  hardware.graphics.enable = true;
+
+  # steam and quest test
+  programs.alvr.enable = true;
+  programs.alvr.openFirewall = true;
+  programs.steam.enable = true;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -61,11 +84,10 @@
     # Home manager modules
     home-manager.nixosModules.home-manager
     ./modules/gnome.nix
-    ./modules/pipewire.nix
-    ./modules/power-management.nix
     ./modules/fonts.nix
     ./modules/keyd.nix
-    ./modules/printers.nix
+    ./modules/pipewire.nix
+    ./modules/uinput.nix
   ];
 
   home-manager = {
@@ -150,7 +172,10 @@
   };
 
   # List packages installed in system profile. To search, run:
-  environment.systemPackages = import ./modules/packages.nix { inherit pkgs; };
+  environment.systemPackages = import ./modules/packages.nix {
+    inherit pkgs pkgs-unstable;
+    pkgs-stable = pkgs-stable;
+  };
 
   programs._1password.enable = true;
   programs._1password-gui = {
@@ -196,5 +221,10 @@
     22
     80
     443
+    3000
+    8000
+    8080
+    5678
+    5173
   ];
 }

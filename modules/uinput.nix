@@ -9,10 +9,13 @@
   '';
 
   # Create the uinput group
-  users.groups.uinput = {};
+  users.groups.uinput = { };
 
   # Add user to the uinput group
   users.users.${username} = {
-    extraGroups = [ "uinput" ];
+    extraGroups = [
+      "input"
+      "uinput"
+    ];
   };
 }

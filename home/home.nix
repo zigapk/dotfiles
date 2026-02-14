@@ -1,13 +1,14 @@
-{ pkgs
-, username
-, homeDirectory
-, emoji
-, ...
+{
+  pkgs,
+  username,
+  homeDirectory,
+  emoji,
+  lib,
+  ...
 }:
 let
   onePassPath = "~/.1password/agent.sock";
   cursorTheme = "Bibata-Modern-Ice";
-  cursorSize = 24;
   papirus = pkgs.papirus-icon-theme;
 in
 {
@@ -19,7 +20,7 @@ in
       papirus
     ];
 
-    stateVersion = "25.05";
+    stateVersion = "25.11";
   };
 
   gtk = {
@@ -40,7 +41,73 @@ in
 
   imports = [
     ./zsh.nix
+
   ];
+
+  systemd.user.services.soniox-dictate = {
+    Unit = {
+      Description = "Soniox Dictate - Voice to text";
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "/home/zigapk/Desktop/soniox-linux/target/release/soniox-dictate";
+      Restart = "on-failure";
+      RestartSec = 3;
+      Environment = "GDK_BACKEND=wayland";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
+  xdg.desktopEntries.chromium = {
+    name = "Chromium";
+    genericName = "Web Browser";
+    comment = "Access the Internet";
+    exec = "chromium %U";
+    icon = "chromium";
+    type = "Application";
+    categories = [
+      "Network"
+      "WebBrowser"
+    ];
+    mimeType = [
+      "application/pdf"
+      "application/rdf+xml"
+      "application/rss+xml"
+      "application/xhtml+xml"
+      "application/xhtml_xml"
+      "application/xml"
+      "image/gif"
+      "image/jpeg"
+      "image/png"
+      "image/webp"
+      "text/html"
+      "text/xml"
+      "x-scheme-handler/http"
+      "x-scheme-handler/https"
+      "x-scheme-handler/webcal"
+      "x-scheme-handler/mailto"
+      "x-scheme-handler/about"
+      "x-scheme-handler/unknown"
+    ];
+    startupNotify = true;
+    settings = {
+      StartupWMClass = "chromium-browser";
+    };
+    actions = {
+      new-window = {
+        name = "New Window";
+        exec = "chromium";
+      };
+      new-private-window = {
+        name = "New Incognito Window";
+        exec = "chromium --incognito";
+      };
+    };
+  };
+
   programs = {
     home-manager.enable = true;
     kitty.enable = true;
@@ -58,7 +125,7 @@ in
       enableZshIntegration = true;
       nix-direnv.enable = true;
     };
-    nixvim = import ./nixvim.nix { inherit pkgs; };
+    nixvim = import ./nixvim.nix { inherit pkgs lib; };
 
     ssh = {
       enable = true;
@@ -77,6 +144,10 @@ in
       enableZshIntegration = true;
       settings = {
         font-size = 12;
+        keybind = [
+          "shift+enter=text:\\x1b\\r"
+          "shift+tab=text:\\x1b[Z"
+        ];
       };
     };
   };

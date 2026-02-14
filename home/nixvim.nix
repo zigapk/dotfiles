@@ -1,4 +1,8 @@
-{ pkgs, ... }: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   enable = true;
   opts = {
     number = true;
@@ -39,6 +43,20 @@
       };
     }
     {
+      action = "<cmd>lua Snacks.picker.files()<cr>";
+      key = "<leader>sf";
+      options = {
+        desc = "File picker";
+      };
+    }
+    {
+      action = "<cmd>lua Snacks.picker.grep()<cr>";
+      key = "<leader>sg";
+      options = {
+        desc = "Search grep";
+      };
+    }
+    {
       action = ":m '>+1<CR>gv=gv";
       key = "J";
       mode = "v";
@@ -55,7 +73,7 @@
       };
     }
     {
-      action = "<cmd>Neotree filesystem reveal left<cr>";
+      action = "<cmd>lua Snacks.explorer.reveal()<cr>";
       key = "<leader>ex";
     }
     {
@@ -107,10 +125,6 @@
       options = {
         desc = "Git browse";
       };
-    }
-    {
-      action = "<cmd>LazyGit<CR>";
-      key = "<leader>gl";
     }
     {
       action = "<cmd>Gitsigns preview_hunk<CR>";
@@ -291,67 +305,6 @@
   colorschemes.catppuccin.enable = true;
   plugins = {
     lualine.enable = true;
-    telescope = {
-      enable = true;
-      keymaps = {
-        "<leader>sf" = "find_files";
-        "<leader>sg" = "live_grep";
-      };
-      settings = {
-        defaults = {
-          file_ignore_patterns = [
-            "^node_modules/"
-            "^.git/"
-            "%.obj$"
-            "%.o$"
-            "%.a$"
-            "%.bin$"
-            "%.dll$"
-            "%.so$"
-            "%.tar.gz$"
-            "%.zip$"
-            "%.iso$"
-          ];
-          prompt_prefix = "   ";
-          dynamic_preview_title = true;
-          path_display = [ "truncate" ];
-          scroll_strategy = "cycle";
-          file_browser = {
-            depth = 1;
-            group_empty = true;
-            hidden = true;
-            respect_gitignore = false;
-          };
-
-          vimgrep_arguments = [
-            "rg"
-            "--color"
-            "never"
-            "--no-heading"
-            "--with-filename"
-            "--line-number"
-            "--column"
-            "--smart-case"
-            "--hidden"
-            "-g"
-            "!.git'"
-          ];
-        };
-        find_files = {
-          find_command = [
-            "rg"
-            "--files"
-            "--color"
-
-            "never"
-            "--hidden"
-            "--smart-case"
-            "-g"
-            "!.git"
-          ];
-        };
-      };
-    };
     treesitter = {
       enable = true;
       settings = {
@@ -394,37 +347,10 @@
     treesitter-context.enable = true;
     treesitter-refactor = {
       enable = true;
-      smartRename = {
+      settings.smart_rename = {
         enable = true;
         keymaps = {
-          smartRename = "<leader>rn";
-        };
-      };
-    };
-    tailwind-tools.enable = true;
-    neo-tree = {
-      enable = true;
-      closeIfLastWindow = true;
-      sortCaseInsensitive = true;
-
-      settings.window = {
-        mappings = {
-          "<C-r>" = "openInExplorer";
-        };
-      };
-
-      extraOptions.filesystem = {
-        commands = {
-          openInExplorer.__raw = ''
-            function(state)
-              local node = state.tree:get_node()
-              local path = node:get_id()
-              -- macOs: open file in default application in the background.
-              vim.fn.jobstart({ "open", "-R", path }, { detach = true })
-              -- Linux: open file in default application
-              vim.fn.jobstart({ "xdg-open", path }, { detach = true })
-            end
-          '';
+          smart_rename = "<leader>rn";
         };
       };
     };
@@ -441,45 +367,46 @@
     };
     dressing.enable = true;
     trouble.enable = true;
-    none-ls = {
+    conform-nvim = {
       enable = true;
       settings = {
-        cmd = [ "bash -c nvim" ];
-        debug = true;
-      };
-      sources = {
-        code_actions = {
-          statix.enable = true;
-          gitsigns.enable = true;
-        };
-        diagnostics = {
-          statix.enable = true;
-          deadnix.enable = true;
-          pylint.enable = true;
-          checkstyle.enable = true;
-        };
-        formatting = {
-          alejandra.enable = true;
-          stylua.enable = true;
-          shfmt.enable = true;
-          nixpkgs_fmt.enable = true;
-          google_java_format.enable = false;
-          prettier = {
-            enable = false;
-            disableTsServerFormatter = true;
+        formatters = {
+          biome = {
+            package = pkgs.biome;
+            command = lib.getExe pkgs.biome;
+          };
+          stylua = {
+            package = pkgs.stylua;
+          };
+          nixfmt = {
+            package = pkgs.nixfmt-rfc-style;
           };
           black = {
-            enable = true;
-            settings = ''
-              {
-                extra_args = { "--fast" },
-              }
-            '';
+            package = pkgs.black;
+          };
+          shfmt = {
+            package = pkgs.shfmt;
           };
         };
-        completion = {
-          luasnip.enable = true;
-          spell.enable = true;
+        # This will format on save, replacing your autocmd
+        format_on_save = {
+          lspFallback = true;
+          timeoutMs = 500;
+        };
+        # Define which formatter to use for which filetype
+        formatters_by_ft = {
+          typescript = ["biome"];
+          typescriptreact = ["biome"];
+          javascript = ["biome"];
+          javascriptreact = ["biome"];
+          json = ["biome"];
+          jsonc = ["biome"];
+
+          # You can add your other formatters from none-ls here
+          lua = ["stylua"];
+          nix = ["nixfmt"];
+          python = ["black"];
+          sh = ["shfmt"];
         };
       };
     };
@@ -508,6 +435,11 @@
         input.enable = true;
         indent.enable = true;
         lazygit.enable = true;
+        terminal.enable = true;
+        explorer = {
+          enable = true;
+          trash = true;
+        };
         scope = {
           enable = true;
           scope.min_size = 7;
@@ -521,7 +453,7 @@
         dashboard = {
           enable = true;
           sections = [
-            { section = "header"; }
+            {section = "header";}
             {
               icon = " ";
               title = "Keymaps";
@@ -572,14 +504,14 @@
     mini = {
       enable = true;
       modules = {
-        ai = { };
-        comment = { };
+        ai = {};
+        comment = {};
         # TODO: completion instead of cmp
         # TODO: move does not work
-        move = { };
+        move = {};
       };
     };
-    lazygit.enable = true;
+    # lazygit.enable = true;
 
     render-markdown = {
       enable = true;
@@ -658,18 +590,6 @@
       };
     };
 
-    illuminate = {
-      enable = true;
-      underCursor = false;
-      filetypesDenylist = [
-        "Outline"
-        "TelescopePrompt"
-        "alpha"
-        "harpoon"
-        "reason"
-      ];
-    };
-
     todo-comments.enable = true;
 
     nix.enable = true;
@@ -678,41 +598,37 @@
     lsp = {
       enable = true;
       servers = {
-        ts_ls = {
+        biome = {
           enable = true;
-          # Disable if deno is in use within a project
-          extraOptions = {
-            single_file_support = false;
-            unstable = true;
-            root_dir = {
-              __raw = ''
-                function(fname)
-                  local util = require("lspconfig.util")
-                  -- if this is a Deno project, don't start tsserver
-                  if util.root_pattern("deno.json", "deno.jsonc")(fname) then
-                    return nil
-                  end
-                  -- otherwise treat it like a normal TS/JS project:
-                  return util.root_pattern("package.json", "tsconfig.json", ".git")(fname)
-                end
-              '';
-            };
-          };
+          package = pkgs.biome;
+          cmd = [(lib.getExe pkgs.biome) "lsp-proxy"];
         };
+        ts_ls.enable = true;
         cssls.enable = true; # CSS
         html.enable = true; # HTML
         pyright.enable = true; # Python
         marksman.enable = true; # Markdown
-        nil_ls.enable = true; # Nix
+        nil_ls = {
+          enable = true;
+          settings = {
+            nil = {
+              externalLinters = {
+                statix = {
+                  enable = true;
+                };
+                deadnix = {
+                  enable = true;
+                };
+              };
+            };
+          };
+        }; # Nix
         dockerls.enable = true; # Docker
         bashls.enable = true; # Bash
         yamlls.enable = true; # YAML
-        eslint.enable = false;
-        biome.enable = true;
         denols = {
           enable = false;
           settings = {
-            enable = true;
             lint = true;
             suggest = {
               imports = {
@@ -725,8 +641,29 @@
             };
           };
           extraOptions = {
-            rootDir = ''require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")'';
             single_file_support = false;
+            # We replace the simple string with a raw function for debugging
+            rootDir = {
+              __raw = ''
+                function(fname)
+                 local util = require("lspconfig.util")
+                 -- 1. Define the pattern we're looking for
+                 local pattern = util.root_pattern("deno.json", "deno.jsonc")
+                 -- 2. Search for the pattern starting from the current file
+                 local root = pattern(fname)
+
+                 -- 3. Check the result and notify us
+                 if root then
+                  vim.notify("[Debug] denols: Found root at: " .. root .. ". Starting denols.", vim.log.levels.INFO)
+                 else
+                  vim.notify("[Debug] denols: No deno.json(c) found. NOT starting denols.", vim.log.levels.WARN)
+                 end
+
+                 -- 4. Return the result
+                 return root
+                end
+              '';
+            };
           };
         };
         ltex = {
@@ -741,7 +678,7 @@
               "gitcommit"
             ];
             completionEnabled = true;
-            language = "en-US de-DE nl";
+            language = "en-US sl-SI";
           };
         };
         gopls = {
@@ -799,8 +736,8 @@
           ];
         };
         sources = [
-          { name = "nvim_lsp"; }
-          { name = "emoji"; }
+          {name = "nvim_lsp";}
+          {name = "emoji";}
           {
             name = "path"; # file system paths
             keywordLength = 3;
@@ -867,12 +804,16 @@
   ];
   extraConfigLua = ''
     require("supermaven-nvim").setup({})
-
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = "*",
-      callback = function(args)
-        vim.lsp.buf.format({ timeout_ms = 2000 })
-      end,
-    })
   '';
+  extraPackages = [
+    pkgs.nodePackages.typescript
+    pkgs.stylua
+    pkgs.nixfmt-rfc-style
+    pkgs.black
+    pkgs.shfmt
+    pkgs.biome
+    pkgs.nil
+    pkgs.statix
+    pkgs.deadnix
+  ];
 }

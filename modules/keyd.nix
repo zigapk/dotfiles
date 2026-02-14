@@ -5,7 +5,7 @@ _: {
     keyboards = {
       default = {
         # Apply to all keyboards
-        ids = [ "*" ];
+        ids = ["*"];
 
         settings = {
           main = {
@@ -18,6 +18,13 @@ _: {
             # Maps alt+h to ctrl+shift+tab
             h = "C-S-tab";
             l = "C-tab";
+            c = "C-c";
+            v = "C-v";
+            x = "C-x";
+          };
+
+          meta = {
+            tab = "A-tab";
           };
         };
       };

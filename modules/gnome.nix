@@ -1,10 +1,11 @@
-{ pkgs
-, lib
-, ...
+{
+  pkgs,
+  lib,
+  ...
 }: {
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
-  environment.gnome.excludePackages = with pkgs; [ ];
+  environment.gnome.excludePackages = with pkgs; [];
 
   programs.dconf.profiles.user.databases = [
     {
@@ -25,26 +26,26 @@
         };
 
         "org/gnome/desktop/wm/keybindings" = {
-          switch-to-workspace-1 = [ "<Super>1" ];
-          switch-to-workspace-2 = [ "<Super>2" ];
-          switch-to-workspace-3 = [ "<Super>3" ];
-          switch-to-workspace-4 = [ "<Super>4" ];
-          switch-to-workspace-5 = [ "<Super>5" ];
-          switch-to-workspace-6 = [ "<Super>6" ];
-          move-to-workspace-1 = [ "<Shift><Super>1" ];
-          move-to-workspace-2 = [ "<Shift><Super>2" ];
-          move-to-workspace-3 = [ "<Shift><Super>3" ];
-          move-to-workspace-4 = [ "<Shift><Super>4" ];
-          move-to-workspace-5 = [ "<Shift><Super>5" ];
-          move-to-workspace-6 = [ "<Shift><Super>6" ];
-          close = [ "<Super>q" ];
-          switch-input-source = [ "<Alt>Escape" ];
-          switch-input-source-backward = [ "<Shift><Alt>Escape" ];
+          switch-to-workspace-1 = ["<Super>1"];
+          switch-to-workspace-2 = ["<Super>2"];
+          switch-to-workspace-3 = ["<Super>3"];
+          switch-to-workspace-4 = ["<Super>4"];
+          switch-to-workspace-5 = ["<Super>5"];
+          switch-to-workspace-6 = ["<Super>6"];
+          move-to-workspace-1 = ["<Shift><Super>1"];
+          move-to-workspace-2 = ["<Shift><Super>2"];
+          move-to-workspace-3 = ["<Shift><Super>3"];
+          move-to-workspace-4 = ["<Shift><Super>4"];
+          move-to-workspace-5 = ["<Shift><Super>5"];
+          move-to-workspace-6 = ["<Shift><Super>6"];
+          close = ["<Super>q"];
+          switch-input-source = ["<Alt>Escape"];
+          switch-input-source-backward = ["<Shift><Alt>Escape"];
           toggle-quick-settings = lib.gvariant.mkEmptyArray lib.gvariant.type.string;
           shitch-applications = lib.gvariant.mkEmptyArray lib.gvariant.type.string;
           switch-applications-backward = lib.gvariant.mkEmptyArray lib.gvariant.type.string;
-          switch-windows = [ "<Alt>Tab" ];
-          switch-windows-backward = [ "<Shift><Alt>Tab" ];
+          switch-windows = ["<Alt>Tab"];
+          switch-windows-backward = ["<Shift><Alt>Tab"];
         };
 
         "org/gnome/settings-daemon/plugins/power" = {
@@ -71,6 +72,7 @@
             pkgs.gnomeExtensions.pano.extensionUuid
             pkgs.gnomeExtensions.blur-my-shell.extensionUuid
             pkgs.gnomeExtensions.wallpaper-slideshow.extensionUuid
+            pkgs.gnomeExtensions.bluetooth-battery-meter.extensionUuid
           ];
         };
         "org/gnome/shell/extensions/pano" = {
@@ -82,10 +84,10 @@
         };
         "org/gnome/shell/extensions/blur-my-shell" = {
           "applications/blur" = true;
-          "applications/whitelist" = [ "com.mitchellh.ghostty" ];
+          "applications/whitelist" = ["com.mitchellh.ghostty"];
           "applications/dynamic-opacity" = false;
           "applications/sigma" = lib.gvariant.mkUint32 26;
-          "applications/opacity" = lib.gvariant.mkUint32 240;
+          "applications/opacity" = lib.gvariant.mkUint32 245;
         };
         "org/gnome/shell/extensions/azwallpaper" = {
           "slideshow-directory" = "/home/zigapk/dotfiles/wallpapers";
@@ -114,8 +116,8 @@
             "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
             "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/"
           ];
-          www = [ "<Super>b" ];
-          search = [ "<Super>space" ];
+          www = ["<Super>b"];
+          search = ["<Super>space"];
         };
 
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {

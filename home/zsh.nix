@@ -12,9 +12,7 @@
     atuin
     direnv
     btop
-    eza
     btop
-    eza
     fzf
     wget
     tree
@@ -29,26 +27,17 @@
 
   programs.zsh = {
     enable = true;
+    enableCompletion = true;
     history.size = 50000;
     history.path = "${config.xdg.dataHome}/zsh/history";
     shellAliases = {
       vim = "nvim";
-      ctrl-l = "clear";
-      C-l = "ctrl-l";
-      control-l = "clear";
-      clean = "clear";
-      ls = "eza -lh --group-directories-first --icons";
-      lsa = "ls -la";
-      lt = "ls --tree --level=2 --git'";
-      lta = "lt -a";
-      ff = "fzf --preview 'bat --style=numbers --color=always {}'";
       wake-kibla = "ssh router \"for i in {1..10}; do wakeonlan -i 192.168.0.255 b2:b7:37:b5:43:f4; sleep 0.4; done\"";
       htop = "btop -u 1000";
       top = "btop -u 1000";
       cat = "bat";
       finit = "rm -rf .envrc .direnv && echo \"use flake\" >> .envrc && direnv allow";
-      wttr = "curl wttr.in/Ljubljana";
-      weather = "curl wttr.in/Ljubljana";
+      rebuild = "sudo nixos-rebuild --flake ~/dotfiles switch";
       v = "nvim .";
       speedtest = "fast -u";
       oc = "opencode";

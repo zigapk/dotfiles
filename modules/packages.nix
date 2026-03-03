@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgs-stable,
   pkgs-unstable,
 }:
 with pkgs;
@@ -11,7 +10,7 @@ with pkgs;
   bruno
   bruno-cli
   gemini-cli-bin
-  opencode
+  pkgs-unstable.opencode
   pkgs-unstable.claude-code
   awscli2
   android-studio
@@ -68,6 +67,8 @@ with pkgs;
   # 🛠️ System & Disk Management
   gparted
   dconf
+  quickemu
+  swtpm
 
   # 🔒 Security & Networking
   gnupg

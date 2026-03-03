@@ -113,10 +113,6 @@ in
     kitty.enable = true;
 
     git = import ./git.nix { inherit pkgs; };
-    carapace = {
-      enable = true;
-      enableZshIntegration = true;
-    };
     starship = import ./starship.nix { inherit emoji; };
     atuin = import ./atuin.nix { inherit pkgs; };
     zoxide = import ./zoxide.nix { inherit pkgs; };

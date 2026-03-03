@@ -8,23 +8,14 @@
   homeDirectory,
   home-manager,
   emoji,
-  walker,
   inputs,
   ...
 }:
 let
-  # Import the stable package set
-  pkgs-stable = import inputs.nixpkgs-stable {
-    # Use the same system as your unstable packages
-    inherit (pkgs) system;
-    # Allow unfree packages in stable as well
-    config.allowUnfree = true;
-  };
   pkgs-unstable = import inputs.nixpkgs-unstable {
-    inherit (pkgs) system;
+    inherit (pkgs.stdenv.hostPlatform) system;
     config.allowUnfree = true;
   };
-  unused = "asdf";
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -37,11 +28,6 @@ in
   hardware.enableAllFirmware = true;
   hardware.graphics.enable = true;
 
-  # steam and quest test
-  programs.alvr.enable = true;
-  programs.alvr.openFirewall = true;
-  programs.steam.enable = true;
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -52,11 +38,10 @@ in
   # Dynamicall linked executables support
   programs.nix-ld.enable = true;
 
-  # Set your time zone.
+  # Set time zone.
   time.timeZone = "Europe/Ljubljana";
 
   # Cleanup nix store automatically
-
   nix.gc.automatic = true;
   nix.gc.dates = "daily";
   nix.gc.options = "--delete-older-than 30d";
@@ -95,7 +80,6 @@ in
     useUserPackages = true;
     sharedModules = [
       nixvim.homeModules.nixvim
-      walker.homeManagerModules.default
     ];
     users.zigapk = import ./home/home.nix {
       inherit
@@ -105,7 +89,6 @@ in
         homeDirectory
         config
         pkgs
-        walker
         ;
     };
   };
@@ -174,7 +157,6 @@ in
   # List packages installed in system profile. To search, run:
   environment.systemPackages = import ./modules/packages.nix {
     inherit pkgs pkgs-unstable;
-    pkgs-stable = pkgs-stable;
   };
 
   programs._1password.enable = true;
@@ -191,13 +173,13 @@ in
     enableBashIntegration = false;
   };
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+  # Allow for USB passthrough to quickemu (quemu) virtual machines based on USB IDs
+  virtualisation.spiceUSBRedirection.enable = true;
+  services.udev.extraRules = ''
+    # Teknic ClearCore USB Passthrough Permissions
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2890", ATTR{idProduct}=="8022", MODE="0666", GROUP="users"
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2890", ATTR{idProduct}=="0201", MODE="0666", GROUP="users"
+  '';
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -208,7 +190,7 @@ in
     };
   };
   services.tailscale.enable = true;
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 
   services.upower.enable = true;
   services.dbus.enable = true;

@@ -25,5 +25,10 @@
       format = "ssh";
       ssh.program = "${pkgs._1password-gui}/bin/op-ssh-sign";
     };
+    url = {
+      "ssh://git@github.com/" = {
+        insteadOf = "https://github.com/";
+      };
+    };
   };
 }

@@ -42,10 +42,10 @@
           switch-input-source = ["<Alt>Escape"];
           switch-input-source-backward = ["<Shift><Alt>Escape"];
           toggle-quick-settings = lib.gvariant.mkEmptyArray lib.gvariant.type.string;
-          shitch-applications = lib.gvariant.mkEmptyArray lib.gvariant.type.string;
+          switch-applications = lib.gvariant.mkEmptyArray lib.gvariant.type.string;
           switch-applications-backward = lib.gvariant.mkEmptyArray lib.gvariant.type.string;
-          switch-windows = ["<Alt>Tab"];
-          switch-windows-backward = ["<Shift><Alt>Tab"];
+          switch-windows = ["<Alt>Tab" "<Super>Tab"];
+          switch-windows-backward = ["<Shift><Alt>Tab" "<Shift><Super>Tab"];
         };
 
         "org/gnome/settings-daemon/plugins/power" = {

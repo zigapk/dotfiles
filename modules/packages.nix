@@ -1,6 +1,7 @@
 {
   pkgs,
   pkgs-unstable,
+  gitbutler,
 }:
 with pkgs;
 [
@@ -11,10 +12,11 @@ with pkgs;
   bruno-cli
   gemini-cli-bin
   pkgs-unstable.opencode
-  pkgs-unstable.claude-code
+  saleae-logic-2
   awscli2
   android-studio
   rpi-imager
+  gitbutler
 
   # 🌐 Web & Communication
   firefox
@@ -47,6 +49,7 @@ with pkgs;
   librsvg
   texliveFull
   obsidian
+  libreoffice
 
   # ⚙️ Core CLI Utilities
   fd

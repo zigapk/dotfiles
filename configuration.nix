@@ -16,6 +16,7 @@ let
     inherit (pkgs.stdenv.hostPlatform) system;
     config.allowUnfree = true;
   };
+  gitbutler = inputs.gitbutler.packages.${pkgs.system}.default;
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -80,6 +81,7 @@ in
     useUserPackages = true;
     sharedModules = [
       nixvim.homeModules.nixvim
+      inputs.worktrunk.homeModules.default
     ];
     users.zigapk = import ./home/home.nix {
       inherit
@@ -99,11 +101,11 @@ in
 
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  services.gvfs.enable = true;
-  services.tumbler.enable = true;
-
   environment.enableAllTerminfo = true;
   hardware.keyboard.qmk.enable = true;
+
+  # Saleae Logic 2 support
+  hardware.saleae-logic.enable = true;
 
   systemd.services.fprintd = {
     wantedBy = [ "multi-user.target" ];
@@ -156,7 +158,7 @@ in
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = import ./modules/packages.nix {
-    inherit pkgs pkgs-unstable;
+    inherit pkgs pkgs-unstable gitbutler;
   };
 
   programs._1password.enable = true;
@@ -181,6 +183,9 @@ in
     SUBSYSTEM=="usb", ATTR{idVendor}=="2890", ATTR{idProduct}=="0201", MODE="0666", GROUP="users"
   '';
 
+  # Installs Saleae Logic 2 udev rules for USB device access without root.
+  services.udev.packages = [ pkgs.saleae-logic-2 ];
+
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
@@ -204,6 +209,7 @@ in
     80
     443
     3000
+    4000
     8000
     8080
     5678

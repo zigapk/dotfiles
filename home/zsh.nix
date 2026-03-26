@@ -31,6 +31,8 @@
     history.size = 50000;
     history.path = "${config.xdg.dataHome}/zsh/history";
     shellAliases = {
+      gl = "lazygit";
+      lg = "lazygit";
       vim = "nvim";
       wake-kibla = "ssh router \"for i in {1..10}; do wakeonlan -i 192.168.0.255 b2:b7:37:b5:43:f4; sleep 0.4; done\"";
       htop = "btop -u 1000";
@@ -64,6 +66,12 @@
 
       zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
       zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+      # Open files in the background
+      open() {
+        xdg-open "$@" >/dev/null 2>&1 &
+        disown
+      }
 
       # Shell integrations
       eval "$(starship init zsh)"

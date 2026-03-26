@@ -22,6 +22,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    gitbutler.url = "github:youwen5/gitbutler-flake";
+    worktrunk.url = "github:max-sixty/worktrunk";
   };
 
   outputs =
@@ -87,6 +89,7 @@
             nixvim
             nix-index-database
             ;
+          worktrunk-pkgs = inputs.worktrunk.packages."x86_64-linux";
         };
         modules = [
           ./kibla/hardware-configuration.nix

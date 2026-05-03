@@ -432,6 +432,15 @@
       settings.current_line_blame = true;
     };
     tmux-navigator.enable = true;
+    flash = {
+      enable = true;
+      settings = {
+        modes = {
+          char.jump_labels = true;
+          search.enabled = true;
+        };
+      };
+    };
     opencode = {
       enable = true;
       # TODO: autoread

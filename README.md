@@ -25,4 +25,3 @@ setup instructions.
 
 TODO:
 - alt + h/l inside neovim
-- flash.nvim

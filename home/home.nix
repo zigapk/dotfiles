@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-unstable,
   username,
   homeDirectory,
   emoji,
@@ -18,6 +19,7 @@ in
 
     packages = with pkgs; [
       papirus
+      diffnav
     ];
 
     stateVersion = "25.11";
@@ -144,6 +146,27 @@ in
           "shift+enter=text:\\x1b\\r"
           "shift+tab=text:\\x1b[Z"
         ];
+      };
+    };
+
+    gh = {
+      enable = true;
+      settings = {
+        git_protocol = "ssh";
+        prompt = "enabled";
+      };
+    };
+
+    opencode = {
+      enable = true;
+      package = pkgs-unstable.opencode;
+      settings = {
+        plugin = [ "opencode-claude-auth@latest" ];
+        agent = {
+          build = {
+            enable1mContext = true;
+          };
+        };
       };
     };
   };

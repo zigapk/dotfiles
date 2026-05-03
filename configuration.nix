@@ -16,7 +16,6 @@ let
     inherit (pkgs.stdenv.hostPlatform) system;
     config.allowUnfree = true;
   };
-  gitbutler = inputs.gitbutler.packages.${pkgs.system}.default;
 in
 {
   nixpkgs.config.allowUnfree = true;
@@ -74,14 +73,20 @@ in
     ./modules/keyd.nix
     ./modules/pipewire.nix
     ./modules/uinput.nix
-  ];
+    ./modules/printing.nix
+  ]
+  # Optional out-of-tree modules (host-specific, not in git).
+  # Anvina VPN config lives in /etc/nixos/local/anvina.nix because it
+  # contains gateway IP, EAP username and internal subnet that we don't
+  # want in a public repo. See README for setup instructions.
+  ++ lib.optional (builtins.pathExists /etc/nixos/local/anvina.nix)
+    /etc/nixos/local/anvina.nix;
 
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     sharedModules = [
       nixvim.homeModules.nixvim
-      inputs.worktrunk.homeModules.default
     ];
     users.zigapk = import ./home/home.nix {
       inherit
@@ -91,6 +96,7 @@ in
         homeDirectory
         config
         pkgs
+        pkgs-unstable
         ;
     };
   };
@@ -106,14 +112,6 @@ in
 
   # Saleae Logic 2 support
   hardware.saleae-logic.enable = true;
-
-  systemd.services.fprintd = {
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig.Type = "simple";
-  };
-  services.fprintd.enable = true;
-  services.fprintd.tod.enable = true;
-  services.fprintd.tod.driver = pkgs.libfprint-2-tod1-goodix;
 
   # Bluetooth
   hardware.bluetooth.enable = true; # enables support for Bluetooth
@@ -158,7 +156,7 @@ in
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = import ./modules/packages.nix {
-    inherit pkgs pkgs-unstable gitbutler;
+    inherit pkgs pkgs-unstable;
   };
 
   programs._1password.enable = true;
@@ -200,8 +198,20 @@ in
   services.upower.enable = true;
   services.dbus.enable = true;
 
+  # Ollama
+  services.ollama = {
+    enable = true;
+    package = pkgs-unstable.ollama-vulkan;
+  };
+
   # Install docker but don't run it by default
-  virtualisation.docker.enable = true;
+  virtualisation = {
+    docker.enable = true;
+    podman = {
+      enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
   systemd.services."docker.service".enable = false;
 
   networking.firewall.allowedTCPPorts = [

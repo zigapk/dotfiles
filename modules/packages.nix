@@ -1,7 +1,6 @@
 {
   pkgs,
   pkgs-unstable,
-  gitbutler,
 }:
 with pkgs;
 [
@@ -11,12 +10,12 @@ with pkgs;
   bruno
   bruno-cli
   gemini-cli-bin
-  pkgs-unstable.opencode
+  pkgs-unstable.anydesk
+  pkgs-unstable.claude-code
   saleae-logic-2
   awscli2
   android-studio
   rpi-imager
-  gitbutler
 
   # 🌐 Web & Communication
   firefox
@@ -33,7 +32,6 @@ with pkgs;
   })
   google-chrome
   slack
-  anydesk
   transmission_4-gtk
 
   # 🎨 Creative & Multimedia
@@ -80,6 +78,7 @@ with pkgs;
   tailscale
   iw
   magic-wormhole
+  strongswan # `ipsec` CLI for controlling VPNs
 
   # ⌨️ Libraries & Firmware
   libqalculate
@@ -88,7 +87,7 @@ with pkgs;
 
   # 📦 Gnome Extensions
   gnomeExtensions.focus-changer
-  gnomeExtensions.pano
+  gnomeExtensions.clipboard-indicator
   gnomeExtensions.blur-my-shell
   gnomeExtensions.wallpaper-slideshow
   gnomeExtensions.bluetooth-battery-meter

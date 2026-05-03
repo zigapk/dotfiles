@@ -19,6 +19,19 @@
           repeat = true;
           repeat-interval = lib.gvariant.mkUint32 30;
         };
+        "org/gnome/desktop/peripherals/touchpad" = {
+          tap-to-click = true;
+          two-finger-scrolling-enabled = true;
+          natural-scroll = true;
+          speed = 0.0;
+          disable-while-typing = true;
+          click-method = "fingers";
+          scroll-factor = 0.5;
+        };
+        "org/gnome/desktop/peripherals/mouse" = {
+          speed = 0.0;
+          accel-profile = "default";
+        };
 
         "org.gnome.desktop.wm.preferences" = {
           # Focus follows mouse
@@ -69,18 +82,22 @@
         "org/gnome/shell" = {
           enabled-extensions = [
             pkgs.gnomeExtensions.focus-changer.extensionUuid
-            pkgs.gnomeExtensions.pano.extensionUuid
+            pkgs.gnomeExtensions.clipboard-indicator.extensionUuid
             pkgs.gnomeExtensions.blur-my-shell.extensionUuid
             pkgs.gnomeExtensions.wallpaper-slideshow.extensionUuid
             pkgs.gnomeExtensions.bluetooth-battery-meter.extensionUuid
           ];
         };
-        "org/gnome/shell/extensions/pano" = {
-          history-length = lib.gvariant.mkUint32 100;
-          send-notification-on-copy = false;
-          play-audio-on-copy = false;
-          keep-search-entry = false;
-          wiggle-indicators = false;
+        "org/gnome/shell/keybindings" = {
+          toggle-message-tray = lib.gvariant.mkEmptyArray lib.gvariant.type.string;
+        };
+        "org/gnome/shell/extensions/clipboard-indicator" = {
+          history-size = lib.gvariant.mkInt32 100;
+          toggle-menu = ["<Super>v"];
+          notify-on-copy = false;
+          paste-on-select = true;
+          excluded-apps = ["1Password"];
+          topbar-preview-size = lib.gvariant.mkInt32 48;
         };
         "org/gnome/shell/extensions/blur-my-shell" = {
           "applications/blur" = true;

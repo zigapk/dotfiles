@@ -18,13 +18,11 @@ Then to update the configuration, run:
 nix flake update --flake ~/dotfiles/nix/.
 ```
 
-TODO:
+Host-specific modules that are not safe to publish (e.g. VPN config)
+live in `/etc/nixos/local/` and are loaded conditionally from
+`configuration.nix`. See `/etc/nixos/local/README.md` on the host for
+setup instructions.
 
-- STICKY KEYS
-- remove SUPER to reveal search
-- wallpaper(s)
+TODO:
 - alt + h/l inside neovim
-- tlp switcher
-- nix search
-- make sure docker is not running by default!
 - flash.nvim

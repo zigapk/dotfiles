@@ -4,6 +4,22 @@
   ...
 }: {
   enable = true;
+  files = {
+    "ftplugin/typst.lua" = {
+      opts = {
+        wrap = true;
+        linebreak = true;
+        textwidth = 0;
+        colorcolumn = "";
+      };
+      keymaps = [
+        { mode = "n"; key = "j"; action = "gj"; options = { buffer = true; noremap = true; }; }
+        { mode = "n"; key = "k"; action = "gk"; options = { buffer = true; noremap = true; }; }
+        { mode = "n"; key = "0"; action = "g0"; options = { buffer = true; noremap = true; }; }
+        { mode = "n"; key = "$"; action = "g$"; options = { buffer = true; noremap = true; }; }
+      ];
+    };
+  };
   opts = {
     number = true;
     relativenumber = true;
@@ -341,6 +357,7 @@
           "vimdoc"
           "markdown_inline"
           "java"
+          "typst"
         ];
       };
     };
@@ -681,6 +698,25 @@
             language = "en-US sl-SI";
           };
         };
+        tinymist = {
+          enable = true;
+          onAttach = {
+            function = ''
+              local root = vim.fs.root(bufnr, {".git", "main.typ"})
+              if root then
+                local main = root .. "/main.typ"
+                if vim.uv.fs_stat(main) then
+                  client:exec_cmd({
+                    title = "pin",
+                    command = "tinymist.pinMain",
+                    arguments = { main },
+                  }, { bufnr = bufnr })
+                end
+              end
+            '';
+          };
+        }; # Typst
+
         gopls = {
           # Golang
           enable = true;

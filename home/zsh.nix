@@ -39,7 +39,7 @@
       top = "btop -u 1000";
       cat = "bat";
       finit = "rm -rf .envrc .direnv && echo \"use flake\" >> .envrc && direnv allow";
-      rebuild = "sudo nixos-rebuild --flake ~/dotfiles switch";
+      rebuild = "sudo nixos-rebuild --flake ~/dotfiles --impure switch";
       v = "nvim .";
       speedtest = "fast -u";
       oc = "opencode";

@@ -46,22 +46,7 @@ in
 
   ];
 
-  systemd.user.services.soniox-dictate = {
-    Unit = {
-      Description = "Soniox Dictate - Voice to text";
-      After = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "simple";
-      ExecStart = "/home/zigapk/Desktop/soniox-linux/target/release/soniox-dictate";
-      Restart = "on-failure";
-      RestartSec = 3;
-      Environment = "GDK_BACKEND=wayland";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
+
 
   xdg.desktopEntries.chromium = {
     name = "Chromium";

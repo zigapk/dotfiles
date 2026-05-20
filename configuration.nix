@@ -31,9 +31,25 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.timeout = 0;
+
+  boot.initrd.compressor = "zstd";
+  boot.initrd.systemd.enable = true;
+  boot.initrd.systemd.tpm2.enable = true;
+
+  boot.tmp.useTmpfs = true;
+  boot.tmp.tmpfsSize = "50%";
+
+  # Plymouth boot animation (BGRT theme reuses BIOS Framework OEM logo with a spinner)
+  boot.plymouth = {
+    enable = true;
+    theme = "bgrt";
+  };
+  boot.kernelParams = [ "quiet" "splash" "boot.shell_on_fail" "loglevel=3" "rd.systemd.show_status=false" "rd.udev.log_level=3" "udev.log_priority=3" ];
 
   networking.hostName = hostname;
   networking.networkmanager.enable = true;
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   # Dynamicall linked executables support
   programs.nix-ld.enable = true;
@@ -45,6 +61,12 @@ in
   nix.gc.automatic = true;
   nix.gc.dates = "daily";
   nix.gc.options = "--delete-older-than 30d";
+  nix.gc.persistent = false;
+
+  systemd.services.nix-gc.serviceConfig = {
+    CPUSchedulingPolicy = "idle";
+    IOSchedulingClass = "idle";
+  };
 
   nix.settings.auto-optimise-store = true;
 
@@ -204,7 +226,7 @@ in
     package = pkgs-unstable.ollama-vulkan;
   };
 
-  # Install docker but don't run it by default
+  # Install docker but don't run it by default (use socket-activation)
   virtualisation = {
     docker.enable = true;
     podman = {
@@ -212,7 +234,7 @@ in
       defaultNetwork.settings.dns_enabled = true;
     };
   };
-  systemd.services."docker.service".enable = false;
+  systemd.services.docker.wantedBy = lib.mkForce [ ];
 
   networking.firewall.allowedTCPPorts = [
     22

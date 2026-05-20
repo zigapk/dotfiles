@@ -38,9 +38,8 @@ with pkgs;
   gimp
   inkscape
   loupe
-  vlc
-  figma-linux
-  gradia
+   vlc
+   gradia
   imagemagick
   playerctl
   pandoc

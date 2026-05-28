@@ -38,8 +38,8 @@ with pkgs;
   gimp
   inkscape
   loupe
-   vlc
-   gradia
+  vlc
+  gradia
   imagemagick
   playerctl
   pandoc

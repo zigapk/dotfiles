@@ -5,6 +5,7 @@
   homeDirectory,
   emoji,
   lib,
+  inputs,
   ...
 }:
 let
@@ -17,9 +18,10 @@ in
     inherit username;
     inherit homeDirectory;
 
-    packages = with pkgs; [
+    packages = [
       papirus
-      diffnav
+      pkgs.diffnav
+      inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.omp
     ];
 
     stateVersion = "25.11";
@@ -45,8 +47,6 @@ in
     ./zsh.nix
 
   ];
-
-
 
   xdg.desktopEntries.chromium = {
     name = "Chromium";

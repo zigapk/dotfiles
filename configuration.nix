@@ -24,7 +24,12 @@ in
     "flakes"
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Binary cache for numtide/llm-agents.nix (provides prebuilt `omp`)
+  nix.settings.extra-substituters = [ "https://cache.numtide.com" ];
+  nix.settings.extra-trusted-public-keys = [
+    "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+  ];
+
   hardware.enableAllFirmware = true;
   hardware.graphics.enable = true;
 
@@ -45,7 +50,15 @@ in
     enable = true;
     theme = "bgrt";
   };
-  boot.kernelParams = [ "quiet" "splash" "boot.shell_on_fail" "loglevel=3" "rd.systemd.show_status=false" "rd.udev.log_level=3" "udev.log_priority=3" ];
+  boot.kernelParams = [
+    "quiet"
+    "splash"
+    "boot.shell_on_fail"
+    "loglevel=3"
+    "rd.systemd.show_status=false"
+    "rd.udev.log_level=3"
+    "udev.log_priority=3"
+  ];
 
   networking.hostName = hostname;
   networking.networkmanager.enable = true;
@@ -101,8 +114,7 @@ in
   # Anvina VPN config lives in /etc/nixos/local/anvina.nix because it
   # contains gateway IP, EAP username and internal subnet that we don't
   # want in a public repo. See README for setup instructions.
-  ++ lib.optional (builtins.pathExists /etc/nixos/local/anvina.nix)
-    /etc/nixos/local/anvina.nix;
+  ++ lib.optional (builtins.pathExists /etc/nixos/local/anvina.nix) /etc/nixos/local/anvina.nix;
 
   home-manager = {
     useGlobalPkgs = true;
@@ -119,6 +131,7 @@ in
         config
         pkgs
         pkgs-unstable
+        inputs
         ;
     };
   };
@@ -240,6 +253,7 @@ in
     22
     80
     443
+    1883
     3000
     4000
     8000

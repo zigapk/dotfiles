@@ -4,6 +4,7 @@
   ...
 }: {
   enable = true;
+  nixpkgs.useGlobalPackages = true;
   files = {
     "ftplugin/typst.lua" = {
       opts = {
@@ -104,7 +105,7 @@
       };
     }
     {
-      action = "<cmd> lua require('telescope.builtin').lsp_references()<cr>";
+      action = "<cmd>lua Snacks.picker.lsp_references()<cr>";
       key = "<leader>gr";
       options = {
         desc = "Go to references";
@@ -196,6 +197,15 @@
       mode = "n";
       options = {
         desc = "Code action";
+      };
+    }
+    # Rename symbol (LSP rename via snacks input)
+    {
+      key = "<leader>rn";
+      mode = "n";
+      action = "<cmd>lua vim.lsp.buf.rename()<cr>";
+      options = {
+        desc = "Rename symbol";
       };
     }
     # Format file
@@ -323,54 +333,35 @@
     lualine.enable = true;
     treesitter = {
       enable = true;
-      settings = {
-        highlight.enable = true;
-        indent.enable = true;
-        incremental_selection = {
-          enable = true;
-          keymaps = {
-            init_selection = "<C-]>";
-            node_incremental = "<C-]>";
-            scope_incremental = false;
-            node_decremental = "<C-[>";
-          };
-        };
-        ensure_installed = [
-          "bash"
-          "diff"
-          "html"
-          "css"
-          "javascript"
-          "typescript"
-          "terraform"
-          "tsx"
-          "json"
-          "yaml"
-          "markdown"
-          "toml"
-          "python"
-          "rust"
-          "lua"
-          "vim"
-          "dockerfile"
-          "make"
-          "vimdoc"
-          "markdown_inline"
-          "java"
-          "typst"
-        ];
-      };
+      highlight.enable = true;
+      indent.enable = true;
+      grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+        nix
+        bash
+        diff
+        html
+        css
+        javascript
+        typescript
+        terraform
+        tsx
+        json
+        yaml
+        markdown
+        toml
+        python
+        rust
+        lua
+        vim
+        dockerfile
+        make
+        vimdoc
+        markdown_inline
+        java
+        typst
+      ];
     };
     treesitter-context.enable = true;
-    treesitter-refactor = {
-      enable = true;
-      settings.smart_rename = {
-        enable = true;
-        keymaps = {
-          smart_rename = "<leader>rn";
-        };
-      };
-    };
     web-devicons.enable = true;
     which-key.enable = true;
     ts-autotag.enable = true;
@@ -396,7 +387,7 @@
             package = pkgs.stylua;
           };
           nixfmt = {
-            package = pkgs.nixfmt-rfc-style;
+            package = pkgs.nixfmt;
           };
           black = {
             package = pkgs.black;
@@ -846,14 +837,27 @@
   extraPlugins = with pkgs.vimPlugins; [
     supermaven-nvim
     vim-visual-multi
+    treesitter-modules-nvim
   ];
   extraConfigLua = ''
     require("supermaven-nvim").setup({})
+
+    require("treesitter-modules").setup({
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-]>",
+          node_incremental = "<C-]>",
+          node_decremental = "<C-[>",
+          scope_incremental = false,
+        },
+      },
+    })
   '';
   extraPackages = [
-    pkgs.nodePackages.typescript
+    pkgs.typescript
     pkgs.stylua
-    pkgs.nixfmt-rfc-style
+    pkgs.nixfmt
     pkgs.black
     pkgs.shfmt
     pkgs.biome

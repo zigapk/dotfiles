@@ -24,7 +24,7 @@ in
       inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.omp
     ];
 
-    stateVersion = "25.11";
+    stateVersion = "26.05";
   };
 
   gtk = {
@@ -113,11 +113,9 @@ in
     ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
+      settings = {
         "*" = {
-          extraOptions = {
-            IdentityAgent = onePassPath;
-          };
+          IdentityAgent = onePassPath;
         };
       };
     };

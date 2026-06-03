@@ -228,7 +228,7 @@ in
     };
   };
   services.tailscale.enable = true;
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05";
 
   services.upower.enable = true;
   services.dbus.enable = true;

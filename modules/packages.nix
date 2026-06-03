@@ -58,7 +58,6 @@ with pkgs;
   unzip
   poppler-utils
   lsof
-  fast-cli
   ffmpeg
   arduino-ide
   arduino-cli

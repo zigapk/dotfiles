@@ -109,12 +109,12 @@
         "org/gnome/shell/extensions/azwallpaper" = {
           "slideshow-directory" = "/home/zigapk/dotfiles/wallpapers";
           "slideshow-slide-duration" = lib.gvariant.mkTuple [
-            (lib.gvariant.mkUint64 2)
-            (lib.gvariant.mkUint64 0)
-            (lib.gvariant.mkUint64 0)
+            (lib.gvariant.mkInt32 1)
+            (lib.gvariant.mkInt32 0)
+            (lib.gvariant.mkInt32 0)
           ];
         };
-        "org/gnomede/desktop/session" = {
+        "org/gnome/desktop/session" = {
           idle-delay = lib.gvariant.mkUint32 0;
         };
         "org/gnome/mutter" = {

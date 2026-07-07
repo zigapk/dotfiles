@@ -22,7 +22,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    herdr = {
+      url = "github:ogulcancelik/herdr/v0.7.1";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
     llm-agents.url = "github:numtide/llm-agents.nix";
+    pi-rewind = {
+      url = "github:arpagon/pi-rewind";
+      flake = false;
+    };
+    zerodays-agents = {
+      url = "git+ssh://git@github.com/zerodays/agents";
+      flake = false;
+    };
   };
 
   outputs =

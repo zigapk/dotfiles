@@ -42,6 +42,7 @@
       v = "nvim .";
       speedtest = "fast -u";
       oc = "opencode";
+      oh = "omp";
     };
     initContent = ''
       ZSH_DISABLE_COMPFIX=true

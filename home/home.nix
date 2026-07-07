@@ -21,8 +21,61 @@ in
     packages = [
       papirus
       pkgs.diffnav
+      pkgs.f1viewer
+      pkgs.mpv
       inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.omp
     ];
+
+    # pi-rewind extension for omp (git-based /rewind checkpoints).
+    # omp merges `extensions` from settings.json with its own config.yml,
+    # so this stays declarative without clobbering omp-managed config.yml.
+    file.".omp/agent/settings.json".text = builtins.toJSON {
+      extensions = [ "${inputs.pi-rewind}/src/index.ts" ];
+    };
+
+    # Slack MCP server (read-only). Long-lived xoxp user token (rotation off) read
+    # from 1Password at request time; the "Bearer " prefix is added here.
+    file.".omp/agent/mcp.json".text = builtins.toJSON {
+      "$schema" =
+        "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json";
+      mcpServers.slack = {
+        type = "http";
+        url = "https://mcp.slack.com/mcp";
+        headers.Authorization =
+          "!printf 'Bearer %s' \"$(op read 'op://Employee/Slack MCP App/USER_TOKEN' --account zerodays.1password.com)\"";
+      };
+      mcpServers.axiom = {
+        type = "http";
+        url = "https://mcp.axiom.co/mcp";
+      };
+      mcpServers.agentmail = {
+        type = "http";
+        url = "https://mcp.agentmail.to/mcp";
+        headers."x-api-key" =
+          "!op read 'op://Private/AgentMail/password' --account zerodays.1password.com";
+      };
+      mcpServers.posthog = {
+        type = "http";
+        url = "https://mcp.posthog.com/mcp";
+      };
+      mcpServers.figma = {
+        type = "http";
+        url = "https://mcp.figma.com/mcp";
+      };
+    };
+
+    # Global agent instructions: upstream base from zerodays/agents (CLAUDE.md, the
+    # concrete file AGENTS.md symlinks to) plus a local overlay tracked in this repo.
+    # Edit agents-local.md and rebuild to tweak; `nix flake update zerodays-agents`
+    # pulls upstream changes.
+    file.".omp/agent/AGENTS.md".text =
+      builtins.readFile "${inputs.zerodays-agents}/CLAUDE.md"
+      + "\n\n"
+      + builtins.readFile ./agents-local.md;
+
+    # Skill bundled with zerodays/agents (already in omp's SKILL.md format).
+    file.".omp/agent/skills/web-animation-design".source =
+      "${inputs.zerodays-agents}/skills/web-animation-design";
 
     stateVersion = "26.05";
   };

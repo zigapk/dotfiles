@@ -60,6 +60,26 @@
       };
     }
     {
+      action = "v:count == 0 ? 'gj' : 'j'";
+      key = "j";
+      mode = [ "n" "x" ];
+      options = {
+        desc = "Move down by display line";
+        expr = true;
+        silent = true;
+      };
+    }
+    {
+      action = "v:count == 0 ? 'gk' : 'k'";
+      key = "k";
+      mode = [ "n" "x" ];
+      options = {
+        desc = "Move up by display line";
+        expr = true;
+        silent = true;
+      };
+    }
+    {
       action = "<cmd>lua Snacks.picker.files()<cr>";
       key = "<leader>sf";
       options = {

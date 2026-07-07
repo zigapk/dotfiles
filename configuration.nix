@@ -63,6 +63,8 @@ in
   networking.hostName = hostname;
   networking.networkmanager.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
+  services.resolved.enable = true;
+  networking.networkmanager.dns = "systemd-resolved";
 
   # Dynamicall linked executables support
   programs.nix-ld.enable = true;
@@ -119,6 +121,7 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    backupFileExtension = "backup";
     sharedModules = [
       nixvim.homeModules.nixvim
     ];
@@ -192,6 +195,7 @@ in
   # List packages installed in system profile. To search, run:
   environment.systemPackages = import ./modules/packages.nix {
     inherit pkgs pkgs-unstable;
+    herdr = inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default;
   };
 
   programs._1password.enable = true;
@@ -258,6 +262,7 @@ in
     4000
     8000
     8080
+    8099
     5678
     5173
   ];

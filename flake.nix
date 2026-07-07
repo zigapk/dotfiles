@@ -84,7 +84,8 @@
           nixos-hardware.nixosModules.framework-amd-ai-300-series
           ./kanta/hardware-configuration.nix
           ./kanta/default.nix
-          ./configuration.nix
+          ./roles/common.nix
+          ./roles/desktop.nix
         ];
       };
 
@@ -103,8 +104,12 @@
             ;
         };
         modules = [
+          inputs.nixos-hardware.nixosModules.common-cpu-amd
+          inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+          inputs.nixos-hardware.nixosModules.common-pc-ssd
           ./kibla/hardware-configuration.nix
-          ./configuration.nix
+          ./roles/common.nix
+          ./roles/server.nix
         ];
       };
     };

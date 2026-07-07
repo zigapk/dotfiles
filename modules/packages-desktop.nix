@@ -1,7 +1,6 @@
 {
   pkgs,
   pkgs-unstable,
-  herdr,
 }:
 with pkgs;
 [
@@ -13,7 +12,6 @@ with pkgs;
   gemini-cli-bin
   pkgs-unstable.anydesk
   pkgs-unstable.claude-code
-  herdr
   saleae-logic-2
   awscli2
   android-studio

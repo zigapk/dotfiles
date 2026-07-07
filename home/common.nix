@@ -6,23 +6,16 @@
   emoji,
   lib,
   inputs,
+  signer,
   ...
 }:
-let
-  onePassPath = "~/.1password/agent.sock";
-  cursorTheme = "Bibata-Modern-Ice";
-  papirus = pkgs.papirus-icon-theme;
-in
 {
   home = {
     inherit username;
     inherit homeDirectory;
 
     packages = [
-      papirus
       pkgs.diffnav
-      pkgs.f1viewer
-      pkgs.mpv
       inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.omp
     ];
 
@@ -80,79 +73,28 @@ in
     stateVersion = "26.05";
   };
 
-  gtk = {
-    enable = true;
-    cursorTheme = {
-      package = pkgs.bibata-cursors;
-      name = cursorTheme;
-    };
-    theme = {
-      name = "Adwaita";
-      package = pkgs.gtk3;
-    };
-    iconTheme = {
-      package = papirus;
-      name = "Papirus";
-    };
-  };
+  # herdr keybindings: prefix+ctrl+{h,l} = prev/next tab, prefix+ctrl+{j,k} =
+  # next/prev workspace (vim-style: horizontal=tabs, vertical=workspaces).
+  # onboarding=false suppresses first-run setup, herdr's only write-back path,
+  # so the store symlink stays valid. `herdr server reload-config` to apply.
+  xdg.configFile."herdr/config.toml".text = ''
+    onboarding = false
+
+    [keys]
+    previous_tab = "prefix+ctrl+h"
+    next_workspace = "prefix+ctrl+j"
+    previous_workspace = "prefix+ctrl+k"
+    next_tab = "prefix+ctrl+l"
+  '';
 
   imports = [
     ./zsh.nix
-
   ];
-
-  xdg.desktopEntries.chromium = {
-    name = "Chromium";
-    genericName = "Web Browser";
-    comment = "Access the Internet";
-    exec = "chromium %U";
-    icon = "chromium";
-    type = "Application";
-    categories = [
-      "Network"
-      "WebBrowser"
-    ];
-    mimeType = [
-      "application/pdf"
-      "application/rdf+xml"
-      "application/rss+xml"
-      "application/xhtml+xml"
-      "application/xhtml_xml"
-      "application/xml"
-      "image/gif"
-      "image/jpeg"
-      "image/png"
-      "image/webp"
-      "text/html"
-      "text/xml"
-      "x-scheme-handler/http"
-      "x-scheme-handler/https"
-      "x-scheme-handler/webcal"
-      "x-scheme-handler/mailto"
-      "x-scheme-handler/about"
-      "x-scheme-handler/unknown"
-    ];
-    startupNotify = true;
-    settings = {
-      StartupWMClass = "chromium-browser";
-    };
-    actions = {
-      new-window = {
-        name = "New Window";
-        exec = "chromium";
-      };
-      new-private-window = {
-        name = "New Incognito Window";
-        exec = "chromium --incognito";
-      };
-    };
-  };
 
   programs = {
     home-manager.enable = true;
-    kitty.enable = true;
 
-    git = import ./git.nix { inherit pkgs; };
+    git = import ./git.nix { inherit pkgs lib signer; };
     starship = import ./starship.nix { inherit emoji; };
     atuin = import ./atuin.nix { inherit pkgs; };
     zoxide = import ./zoxide.nix { inherit pkgs; };
@@ -163,26 +105,12 @@ in
     };
     nixvim = import ./nixvim.nix { inherit pkgs lib; };
 
+    # Base ssh client. No IdentityAgent here: on the headless server this lets
+    # the 1Password agent forwarded over SSH from kanta ($SSH_AUTH_SOCK) drive
+    # auth and commit signing. The desktop layer adds the local agent socket.
     ssh = {
       enable = true;
       enableDefaultConfig = false;
-      settings = {
-        "*" = {
-          IdentityAgent = onePassPath;
-        };
-      };
-    };
-
-    ghostty = {
-      enable = true;
-      enableZshIntegration = true;
-      settings = {
-        font-size = 12;
-        keybind = [
-          "shift+enter=text:\\x1b\\r"
-          "shift+tab=text:\\x1b[Z"
-        ];
-      };
     };
 
     gh = {

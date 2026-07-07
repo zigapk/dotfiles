@@ -35,9 +35,30 @@
     shiftround = true;
     expandtab = true;
     scrolloff = 10;
-    clipboard = "unnamedplus";
     ignorecase = true;
   };
+
+  # Headless clipboard: on a machine with no local display (e.g. the kibla
+  # server, reached via ssh/herdr), Neovim installs no clipboard provider
+  # because its OSC 52 auto-fallback only triggers when $SSH_TTY is set, which
+  # herdr-spawned panes lack. Wire the OSC 52 provider explicitly so `yy`/`p`
+  # ride the terminal escape back to the attaching client's clipboard. The
+  # provider MUST be set before `clipboard=unnamedplus` triggers provider
+  # resolution, so `clipboard` is dropped from `opts` (which nixvim applies
+  # early, before this) and set here right after the provider. On a desktop
+  # (WAYLAND_DISPLAY/DISPLAY present) the provider is skipped, so the option
+  # resolves to the native wl-copy provider as before.
+  extraConfigLuaPre = ''
+    if vim.env.WAYLAND_DISPLAY == nil and vim.env.DISPLAY == nil then
+      local osc52 = require("vim.ui.clipboard.osc52")
+      vim.g.clipboard = {
+        name = "OSC 52",
+        copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+        paste = { ["+"] = osc52.paste("+"), ["*"] = osc52.paste("*") },
+      }
+    end
+    vim.opt.clipboard = "unnamedplus"
+  '';
   autoCmd = [
     # Vertically center when entering insert mode
     {

@@ -1,5 +1,6 @@
 {
   pkgs,
+  username,
   ...
 }:
 {
@@ -11,4 +12,5 @@
 
   # Commit signing uses the 1Password agent forwarded over SSH from kanta.
   home-manager.extraSpecialArgs.signer = "agent";
+  home-manager.users.${username}.imports = [ ../home/server.nix ];
 }

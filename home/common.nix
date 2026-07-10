@@ -26,16 +26,18 @@
       extensions = [ "${inputs.pi-rewind}/src/index.ts" ];
     };
 
-    # Slack MCP server (read-only). Long-lived xoxp user token (rotation off) read
-    # from 1Password at request time; the "Bearer " prefix is added here.
+    # MCP secrets are decrypted by agenix to /run/agenix/<name> (tmpfs, 0400,
+    # owned by this user) and read at request time via `!cat`. Both hosts get
+    # them from the encrypted `.age` files in secrets/ — no `op`/1Password CLI
+    # dependency, so this works on the headless kibla server too. Rotate with:
+    #   op read 'op://…' | nix run github:ryantm/agenix -- -e secrets/<name>.age
     file.".omp/agent/mcp.json".text = builtins.toJSON {
       "$schema" =
         "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json";
       mcpServers.slack = {
         type = "http";
         url = "https://mcp.slack.com/mcp";
-        headers.Authorization =
-          "!printf 'Bearer %s' \"$(op read 'op://Employee/Slack MCP App/USER_TOKEN' --account zerodays.1password.com)\"";
+        headers.Authorization = "!printf 'Bearer %s' \"$(cat /run/agenix/slack-token)\"";
       };
       mcpServers.axiom = {
         type = "http";
@@ -44,8 +46,7 @@
       mcpServers.agentmail = {
         type = "http";
         url = "https://mcp.agentmail.to/mcp";
-        headers."x-api-key" =
-          "!op read 'op://Private/AgentMail/password' --account zerodays.1password.com";
+        headers."x-api-key" = "!cat /run/agenix/agentmail-key";
       };
       mcpServers.posthog = {
         type = "http";

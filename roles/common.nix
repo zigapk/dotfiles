@@ -23,6 +23,7 @@ in
     ../modules/users.nix
     ../modules/locale.nix
     ../modules/virtualisation.nix
+    ../modules/secrets.nix
   ];
 
   # Expose the unstable pkgs set to sibling NixOS modules (e.g. desktop role).

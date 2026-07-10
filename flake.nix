@@ -35,6 +35,10 @@
       url = "git+ssh://git@github.com/zerodays/agents";
       flake = false;
     };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

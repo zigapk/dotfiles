@@ -74,6 +74,17 @@
     stateVersion = "26.05";
   };
 
+  # herdr's omp integration reports omp's real lifecycle state (idle/working/
+  # blocked) to herdr instead of screen-scraping heuristics. The extension is
+  # embedded in the herdr binary; `herdr integration install omp` writes it to
+  # ~/.omp/agent/extensions/ where omp auto-discovers loose *.ts. Done at
+  # activation (not a static committed copy) so it tracks the herdr version.
+  home.activation.herdrOmpIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p "$HOME/.omp/agent/extensions"
+    run ${inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/herdr \
+      integration install omp || true
+  '';
+
   # herdr keybindings: prefix+ctrl+{h,l} = prev/next tab, prefix+ctrl+{j,k} =
   # next/prev workspace (vim-style: horizontal=tabs, vertical=workspaces).
   # onboarding=false suppresses first-run setup, herdr's only write-back path,
